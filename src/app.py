@@ -14,12 +14,12 @@ url = 'https://www.instagram.com/platinump_____/?hl=en'
 logger.addHandler(handler)
 
 
-# TODO: If no provider found -> return @s linked so you can input those instead
+# TODO: If no provider found -> return @s linked so you can input those instead on the front end
 # Todo: Add search mode + append mode
 
 
 def app():
-    # beacons / lik.bio / link.tree / bitly
+    # beacons / lik.bio / link.tree / allmylinks
 
     username = url.strip().split("/")[3].lower()
     profiles_path = str(pathlib.Path().absolute()) + "/data/profiles/"
@@ -41,7 +41,6 @@ def app():
     logger.info(f"Profile found: {url}")
     found_links = identify_provider(content)
 
-    # return provider
     if not found_links:
         logger.error("Provider not found or profile is not using providers")
         return False
