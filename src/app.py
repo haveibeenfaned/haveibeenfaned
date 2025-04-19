@@ -52,7 +52,6 @@ def app():
     logger.info(f"Protential provider of funny content found: {found_links}")
 
     for link in found_links:
-        # returns parsed page
         profile_funny_page_file_path = profiles_path + f"{username}_{link[0]}.txt"
 
         if not file_is_local(profile_funny_page_file_path):

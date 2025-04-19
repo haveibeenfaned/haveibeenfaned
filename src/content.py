@@ -39,6 +39,7 @@ def as_headless(options: webdriver.ChromeOptions) -> webdriver.ChromeOptions:
     return options
 
 
+# Nice right?
 def re_get_content(content_providers: dict[str, list[dict[str, Union[str, Callable[[str], str]]]]],
                    content: str) -> list:
     found_providers = []
