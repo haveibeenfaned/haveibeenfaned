@@ -1,17 +1,21 @@
-import io
 import logging
 import pathlib
 import re
+import sys
 import time
 import urllib.parse
 from typing import Optional
 
 import requests
-
 from selenium import webdriver
 
-logger = logging.Logger("app-loger")
-url = 'https://www.instagram.com/LimitlessMacey/?hl=en'
+logger = logging.getLogger("app-loger")
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+url = 'https://www.instagram.com/ohlileven/?hl=en'
+logger.addHandler(handler)
+
 
 # TODO: Parse beacons.ai, parse lnk.bio
 # TODO: Parse profiles that have multiple @s on their profile which end up in the funny link
@@ -103,23 +107,28 @@ def selenium_get_content(url: str, **kwargs) -> str:
 
 
 def identify_provider(content: str) -> list[Optional[list]]:
-
     providers = {
-        "linktr.ee": r"https%3A%2F%2Flinktr.ee%2F[a-zA-Z_-]+",
+        "linktr.ee": [
+            {"find": r"linktr.ee%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},  # href={enconded_link}
+            {"find": r"linktr.ee/[a-zA-Z_-]+", "post": ""}  # <span>{link}<span>
+        ]
     }
 
     found_providers = []
 
-    for key, value in providers.items():
-        link = re.findall(value, content)
+    for provider, patterns in providers.items():
 
-        # check when it comes directly from <span>{link}<span>
-        if link:
-            decoded = urllib.parse.unquote(link[0])
-            if decoded:
-                found_providers.append([key, decoded])
-            else:
-                logger.warning(f"Might have a link but failed to decode: {link}")
+        for pattern in patterns:
+            link = re.findall(pattern["find"], content)
+
+            if not link:
+                continue
+
+            link = link[0]
+            if pattern["post"]:
+                link = pattern["post"].__call__(link)
+
+            found_providers.append([provider, f"https://{link}"])
 
     return found_providers
 
