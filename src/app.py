@@ -194,8 +194,16 @@ def has_onlyfans(content: str) -> dict:
     return has
 
 
-def has_fansly(content: str) -> str:
-    pass
+def has_fansly(content: str) -> dict:
+    has = {}
+    link = re.findall(r"https://fansly.com/[A-Za-z_-]+", content)
+
+    if link:
+        link = list(set(link))  # OF requests.get returns 2 links sometimes, deduplicate
+        has["source"] = "onlyfans"
+        has["url"] = link[0]
+
+    return has
 
 
 def has_twitter(url: str) -> str:
