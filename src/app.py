@@ -1,23 +1,19 @@
 import logging
 import pathlib
-import re
 import sys
-import time
-import urllib.parse
-from typing import Optional
 
-import requests
-from selenium import webdriver
+from src.content import selenium_get_content, get_provider_content
+from src.identify import identify_provider, identify_funny_content
+from src.utils import file_is_local, save_content
 
 logger = logging.getLogger("app-loger")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.INFO)
-url = 'https://www.instagram.com/msjennafischer'
+url = 'https://www.instagram.com/platinump_____/?hl=en'
 logger.addHandler(handler)
 
 
-# TODO: Parse beacons.ai, parse lnk.bio
 # TODO: If no provider found -> return @s linked so you can input those instead
 # Todo: Add search mode + append mode
 
@@ -39,7 +35,7 @@ def app():
             logger.error("Error saving profile")
 
     if not content:
-        logger.error("Profile not found or not defined")
+        logger.warning("Page empty or does not exist")
         return False
 
     logger.info(f"Profile found: {url}")
@@ -71,140 +67,10 @@ def app():
         else:
             funny_page = open(profile_funny_page_file_path, "r").read()
 
-        of = has_onlyfans(funny_page)
-        fansly = has_fansly(funny_page)
-
-        if of or fansly:
-            twitter = has_twitter(funny_page)
-            logger.info(f"You have been faned: {of}, {fansly}, {twitter}")
+        funny_content = identify_funny_content(funny_page)
+        if funny_content:
+            logger.info(f"You have been faned: {funny_content}, He/She is for the streets.")
         else:
-            logger.info(f"You have not been faned!")
+            logger.info(f"You have not been faned! He/She is a keeper.")
 
     return True
-
-
-def save_content(content: str, path: str) -> bool:
-    open(path, "w").write(content)
-    return file_is_local(path)
-
-
-def file_is_local(path: str) -> bool:
-    return pathlib.Path(path).exists()
-
-
-def dir_is_local(path: str) -> bool:
-    return pathlib.Path(path).is_dir()
-
-
-def as_headless(options: webdriver.ChromeOptions) -> webdriver.ChromeOptions:
-    options.add_argument("--headless=new")
-    return options
-
-
-def requests_get_content(url: str) -> str:
-    r = requests.get(url)
-    if r.status_code != 200 or r.content is None or r.content == "":
-        return ""
-
-    return r.content.decode("utf-8")
-
-
-def selenium_get_content(url: str, **kwargs) -> str:
-    options = webdriver.ChromeOptions()
-
-    if kwargs.get("as_headless", ""):
-        options = as_headless(options)
-
-    driver = webdriver.Chrome(options=options)
-    driver.get(url)
-    time.sleep(20)
-    source = str(driver.page_source)
-    driver.quit()
-
-    del driver
-
-    if not source:
-        logger.warning("Page empty or does not exist")
-        return ""
-
-    return source
-
-
-def identify_provider(content: str) -> list[Optional[list]]:
-    providers = {
-        "linktr.ee": [
-            {"find": r"linktr.ee%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},  # href={enconded_link}
-            {"find": r"linktr.ee/[a-zA-Z_-]+", "post": ""}  # <span>{link}<span>,
-
-        ],
-        "beacons.ai": [
-            {"find": r"beacons.ai%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},  # href={enconded_link}
-            {"find": r"beacons.ai/[a-zA-Z_-]+", "post": ""}  # <span>{link}<span>
-        ],
-        "lnk.bio": [
-            {"find": r"lnk.bio%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},
-            {"find": r"lnk.bio/[a-zA-Z_-]+", "post": ""}
-        ]
-    }
-
-    found_providers = []
-
-    for provider, patterns in providers.items():
-
-        for pattern in patterns:
-            link = re.findall(pattern["find"], content)
-
-            if not link:
-                continue
-
-            link = link[0]
-            if pattern["post"]:
-                link = pattern["post"].__call__(link)
-
-            found_providers.append([provider, f"https://{link}"])
-            break
-
-    return found_providers
-
-
-def get_provider_content(links: list[list]) -> str:
-    content = ""
-    for link in links:
-        if "beacons" in link[0]:
-            content = selenium_get_content(link[1], as_headless=False)
-
-        if "linktr" in link[0]:
-            content = requests_get_content(link[1])
-
-        if "lnk" in link[0]:
-            content = selenium_get_content(link[1], as_headless=False)
-
-    return content
-
-
-def has_onlyfans(content: str) -> dict:
-    has = {}
-    link = re.findall(r"https://onlyfans.com/[A-Za-z_-]+", content)
-
-    if link:
-        link = list(set(link))  # OF requests.get returns 2 links sometimes, deduplicate
-        has["source"] = "onlyfans"
-        has["url"] = link[0]
-
-    return has
-
-
-def has_fansly(content: str) -> dict:
-    has = {}
-    link = re.findall(r"https://fansly.com/[A-Za-z_-]+", content)
-
-    if link:
-        link = list(set(link))  # OF requests.get returns 2 links sometimes, deduplicate
-        has["source"] = "onlyfans"
-        has["url"] = link[0]
-
-    return has
-
-
-def has_twitter(url: str) -> str:
-    pass
