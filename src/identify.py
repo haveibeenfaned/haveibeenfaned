@@ -1,8 +1,7 @@
 import urllib
 from typing import Optional
 
-from src.content import selenium_get_content, requests_get_content, re_get_content
-from src.utils import make_unique
+from src.content import re_get_content
 
 
 def identify_provider(content: str) -> list[Optional[list]]:
@@ -30,7 +29,6 @@ def identify_provider(content: str) -> list[Optional[list]]:
 
 
 def identify_funny_content(content: str) -> list:
-
     content_provider = {
         "onlyfans": [
             {"find": r"https://onlyfans.com/[A-Za-z_-]+", "post": ""}
