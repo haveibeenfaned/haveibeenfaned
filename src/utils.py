@@ -14,5 +14,5 @@ def dir_is_local(path: str) -> bool:
     return pathlib.Path(path).is_dir()
 
 
-def make_unique(input: list) -> list:
-    return list(set(input))
+def make_unique(inp: list) -> list:
+    return list(set(inp))
