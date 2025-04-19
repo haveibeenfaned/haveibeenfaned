@@ -13,7 +13,7 @@ logger = logging.getLogger("app-loger")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.INFO)
-url = 'https://www.instagram.com/ohlileven/?hl=en'
+url = 'https://www.instagram.com/msjennafischer'
 logger.addHandler(handler)
 
 
@@ -75,7 +75,8 @@ def app():
         fansly = has_fansly(funny_page)
 
         if of or fansly:
-            logger.info(f"You have been faned: {of}, {fansly}")
+            twitter = has_twitter(funny_page)
+            logger.info(f"You have been faned: {of}, {fansly}, {twitter}")
         else:
             logger.info(f"You have not been faned!")
 
@@ -133,7 +134,16 @@ def identify_provider(content: str) -> list[Optional[list]]:
     providers = {
         "linktr.ee": [
             {"find": r"linktr.ee%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},  # href={enconded_link}
-            {"find": r"linktr.ee/[a-zA-Z_-]+", "post": ""}  # <span>{link}<span>
+            {"find": r"linktr.ee/[a-zA-Z_-]+", "post": ""}  # <span>{link}<span>,
+
+        ],
+        "beacons.ai": [
+            {"find": r"beacons.ai%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},  # href={enconded_link}
+            {"find": r"beacons.ai/[a-zA-Z_-]+", "post": ""}  # <span>{link}<span>
+        ],
+        "lnk.bio": [
+            {"find": r"lnk.bio%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},
+            {"find": r"lnk.bio/[a-zA-Z_-]+", "post": ""}
         ]
     }
 
@@ -165,6 +175,9 @@ def get_provider_content(links: list[list]) -> str:
 
         if "linktr" in link[0]:
             content = requests_get_content(link[1])
+
+        if "lnk" in link[0]:
+            content = selenium_get_content(link[1], as_headless=False)
 
     return content
 
