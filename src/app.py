@@ -15,7 +15,11 @@ logger.addHandler(handler)
 
 
 # TODO: If no provider found -> return @s linked so you can input those instead on the front end
-# Todo: Add search mode + append mode
+# TODO: Add search mode + append mode
+# TODO: Add database integration
+# TODO: Add tests
+# TODO: Add base infra
+# TODO: Add github actions for tests / base infra deployments
 
 
 def app():
