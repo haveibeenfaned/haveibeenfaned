@@ -2,6 +2,7 @@ import logging
 import pathlib
 import sys
 
+from identify import identify_funny_content_no_provider
 from src.content import selenium_get_content, get_provider_content
 from src.identify import identify_provider, identify_funny_content
 from src.utils import file_is_local, save_content
@@ -20,6 +21,7 @@ logger.addHandler(handler)
 # TODO: Add tests
 # TODO: Add base infra
 # TODO: Add github actions for tests / base infra deployments
+# TODO: Will probably have to switch to a user inputs a username then check if it exists in providers
 
 
 def app():
@@ -44,8 +46,9 @@ def app():
 
     logger.info(f"Profile found: {url}")
     found_links = identify_provider(content)
+    funny_content = identify_funny_content_no_provider(content)
 
-    if not found_links:
+    if not found_links and funny_content:
         logger.error("Provider not found or profile is not using providers")
         return False
 
@@ -69,10 +72,10 @@ def app():
         else:
             funny_page = open(profile_funny_page_file_path, "r").read()
 
-        funny_content = identify_funny_content(funny_page)
-        if funny_content:
-            logger.info(f"You have been faned: {funny_content}, He/She is for the streets.")
-        else:
-            logger.info(f"You have not been faned! He/She is a keeper.")
+        funny_content.append(identify_funny_content(funny_page))
+    if funny_content:
+        logger.info(f"You have been faned: {funny_content}, He/She is for the streets.")
+    else:
+        logger.info(f"You have not been faned! He/She is a keeper.")
 
     return True
