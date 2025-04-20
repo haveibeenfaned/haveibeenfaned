@@ -9,7 +9,6 @@ def identify_provider(content: str) -> list[Optional[list]]:
         "linktr.ee": [
             {"find": r"linktr.ee%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},  # href={enconded_link}
             {"find": r"linktr.ee/[a-zA-Z_-]+", "post": ""}  # <span>{link}<span>,
-
         ],
         "beacons.ai": [
             {"find": r"beacons.ai%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},

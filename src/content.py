@@ -56,7 +56,7 @@ def re_get_content(content_providers: dict[str, list[dict[str, Union[str, Callab
             if pattern["post"]:
                 link = pattern["post"].__call__(link)
 
-            found_providers.append([provider, f"https://{link}"])
+            found_providers.append([provider, f"{link}"])
             break
 
     return found_providers
