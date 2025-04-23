@@ -1,8 +1,10 @@
-from src.app import app
+import uvicorn
+
+from api.app import app
 
 
 def main():
-    app()
+    uvicorn.run(app)
 
 
 if __name__ == "__main__":

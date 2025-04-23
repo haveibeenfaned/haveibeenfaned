@@ -30,10 +30,10 @@ def identify_provider(content: str) -> list[Optional[list]]:
 def identify_funny_content_no_provider(content: str) -> list:
     content_provider = {
         "onlyfans": [
-            {"find": r"https://onlyfans.com/[A-Za-z_-]+", "post": ""}
+            {"find": r"onlyfans.com/[A-Za-z_-]+", "post": ""}
         ],
         "fansly": [
-            {"find": r"https://fansly.com/[A-Za-z_-]+", "post": ""}
+            {"find": r"fansly.com/[A-Za-z_-]+", "post": ""}
         ]
     }
     return re_get_content(content_provider, content)
@@ -42,10 +42,10 @@ def identify_funny_content_no_provider(content: str) -> list:
 def identify_funny_content(content: str) -> list:
     content_provider = {
         "onlyfans": [
-            {"find": r"https://onlyfans.com/[A-Za-z_-]+", "post": ""}
+            {"find": r"onlyfans.com/[A-Za-z_-]+", "post": ""}
         ],
         "fansly": [
-            {"find": r"https://fansly.com/[A-Za-z_-]+", "post": ""}
+            {"find": r"fansly.com/[A-Za-z_-]+", "post": ""}
         ]
     }
 

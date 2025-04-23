@@ -2,16 +2,15 @@ import logging
 import pathlib
 import sys
 
-from identify import identify_funny_content_no_provider
+from src.identify import identify_funny_content_no_provider
 from src.content import selenium_get_content, get_provider_content
 from src.identify import identify_provider, identify_funny_content
 from src.utils import file_is_local, save_content
 
-logger = logging.getLogger("app-loger")
+logger = logging.getLogger("scanner.txt")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.INFO)
-url = 'https://www.instagram.com/platinump_____/?hl=en'
 logger.addHandler(handler)
 
 
@@ -24,7 +23,7 @@ logger.addHandler(handler)
 # TODO: Will probably have to switch to a user inputs a username then check if it exists in providers
 
 
-def app():
+def app(url: str = "https://www.instagram.com/platinump_____/?hl=en"):
     # beacons / lik.bio / link.tree / allmylinks
 
     username = url.strip().split("/")[3].lower()
