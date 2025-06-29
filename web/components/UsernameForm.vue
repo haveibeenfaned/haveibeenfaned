@@ -3,35 +3,41 @@
     <form @submit.prevent="handleSubmit" class="form-box">
       <label for="message" class="form-label">Check in the Hall of Shame</label>
       <input
-        id="message"
-        v-model="message"
-        type="text"
-        maxlength="256"
-        class="form-input"
-        placeholder="Enter your message"
-        required
+          id="message"
+          v-model="message"
+          type="text"
+          maxlength="256"
+          class="form-input"
+          placeholder="Enter your message"
+          required
       />
       <button
-        type="submit"
-        class="submit-button"
-        :disabled="loading"
+          type="submit"
+          class="submit-button"
+          :disabled="loading"
       >
         {{ loading ? 'Sending...' : 'Submit' }}
       </button>
 
       <p v-if="success" class="success-message">Message sent successfully!</p>
       <p v-if="error" class="error-message">Error sending message.</p>
+
+      <div v-if="responseText" class="response-box">
+        <strong>Server response:</strong>
+        <pre>{{ responseText }}</pre>
+      </div>
+
     </form>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
 
 const message = ref('')
 const loading = ref(false)
 const success = ref(false)
 const error = ref(false)
+let responseText = ref('')
 
 const handleSubmit = async () => {
   loading.value = true
@@ -39,16 +45,14 @@ const handleSubmit = async () => {
   error.value = false
 
   try {
-    const response = await fetch('http://localhost:8080', {
+    const response = await fetch('/api/v1/scan/username/' + message.value.toString(), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ message: message.value })
-    })
-
-    if (!response.ok) throw new Error('Request failed')
-
+      body: JSON.stringify({message: message.value})
+    }).then(response => response.json()).then(response => response[0][0].join(":"))
+    responseText.value = response
     success.value = true
     message.value = ''
   } catch (err) {
@@ -83,7 +87,7 @@ const handleSubmit = async () => {
   font-size: 17px;
   font-weight: 500;
   color: #333;
-  text-align: center;          /* Center label text */
+  text-align: center; /* Center label text */
   margin-bottom: 8px;
   width: 100%;
 }

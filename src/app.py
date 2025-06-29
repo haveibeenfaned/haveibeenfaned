@@ -77,4 +77,4 @@ def app(url: str = "https://www.instagram.com/platinump_____/?hl=en"):
     else:
         logger.info(f"You have not been faned! He/She is a keeper.")
 
-    return True
+    return funny_content
