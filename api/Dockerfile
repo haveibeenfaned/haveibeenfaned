@@ -4,6 +4,7 @@ WORKDIR /var/opt/
 
 RUN useradd -ms /bin/sh -b /var/opt/ app && usermod -aG app app
 USER app
+
 ADD src ./app/src
 ADD api ./app/api
 COPY main.py ./app
