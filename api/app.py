@@ -10,10 +10,14 @@ from api.routes.scan.username import username_router
 from api.utils.api_key import verify_api_key
 from fastapi.staticfiles import StaticFiles
 
+from routes.status.status import status_router
+
 logger = logging.Logger("app-logger")
-app = FastAPI()
-app.include_router(url_router, prefix="/api/v1/scan/url", dependencies=[Depends(verify_api_key)])
-app.include_router(username_router, prefix="/api/v1/scan/username")
+app = FastAPI(root_path="/api/v1")
+app.include_router(url_router, prefix="/scan/url", dependencies=[Depends(verify_api_key)])
+app.include_router(username_router, prefix="/scan/username")
+app.include_router(status_router, prefix="/status")
+
 origins = os.getenv("ORIGINS", ["http://localhost", "http://localhost:3000"])
 
 app.add_middleware(
@@ -26,6 +30,6 @@ app.add_middleware(
 app.mount("/", StaticFiles(directory='./ui', html=True), name="web")
 
 
-@app.get("/api")
+@app.get("/api/")
 async def index():
     return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "haveibeenfaned API V1"})

@@ -1,5 +1,3 @@
-<script lang="js"></script>
-
 <NuxtPage/>
 <template>
   <div
@@ -13,11 +11,7 @@
 
 </template>
 
-<style>
-
-#title {
-  font-family: "Andale Mono", sans-serif;
-  font-style: italic;
-}
-
+<style lang="css">
+@import '../styles/IndexStyles.css';
+@import '../styles/UsernameFormStyles.css';
 </style>
