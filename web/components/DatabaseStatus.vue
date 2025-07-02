@@ -25,7 +25,7 @@ const handleStatus = async () => {
 
   try {
     crawlerStatus.value = await fetch('/api/v1/crawler/status/', {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -41,7 +41,7 @@ const handleStatus = async () => {
 
   try {
     databaseStatus.value = await fetch('/api/v1/database/status/' + message.value.toString(), {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       },
