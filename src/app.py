@@ -2,7 +2,7 @@ import logging
 import pathlib
 import sys
 
-from database import persist_username
+from src.database import persist_username
 from src.identify import identify_funny_content_no_provider
 from src.content import selenium_get_content, get_provider_content
 from src.identify import identify_provider, identify_funny_content
@@ -15,7 +15,7 @@ handler.setLevel(logging.INFO)
 logger.addHandler(handler)
 
 
-# TODO: If no provider found -> return @s linked so you can input those instead on the front end
+# TODO: If no provider found -> return @s linked so you can input those instead on the front end things
 # TODO: Add search mode + append mode
 # TODO: Add database integration
 # TODO: Add tests
