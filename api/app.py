@@ -10,7 +10,7 @@ from api.routes.scan.username import username_router
 from api.utils.api_key import verify_api_key
 from fastapi.staticfiles import StaticFiles
 
-from routes.status.status import status_router
+from api.routes.status.status import status_router
 
 logger = logging.Logger("app-logger")
 app = FastAPI(root_path="/api/v1")

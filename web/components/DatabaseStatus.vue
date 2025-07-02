@@ -1,15 +1,29 @@
 <template>
-  <div v-if="crawlerStatus" class="response-box">
-    <strong>Crawler Status response:</strong>
-    <pre>{{ crawlerStatus }}</pre>
+  <div class="form-box">
+    <strong class="form-label">Crawler Status:</strong>
+    <div v-if="crawlerStatus === 'False'" class="form-label">
+      <pre>{{ 'Crawler is either Stopped / Paused / On Maintenance. Your requests will be processed at a later date!'	}}</pre>
+    </div>
+    <div v-if="crawlerStatus === 'True'">
+      <pre>{{ 'Crawler is Running. Your requests will be processed in real time!'	}}</pre>
+    </div>
+    <div v-if="databaseStatus === 'False'" class="form-label">
+      <strong class="form-label">Database Status: </strong>
+      <pre>{{ 'Database is either Stopped / Paused / On Maintenance. Your requests will be processed at a later date!'	}}</pre>
+    </div>
+    <div v-if="databaseStatus === 'True' && crawlerStatus === 'True'" class="form-label">
+      <strong class="form-label">Database Status: </strong>
+      <pre>{{ 'Database is Running. Your requests will be stored and processed in real time!'	}}</pre>
+    </div>
+    <div v-if="databaseStatus === 'True' && crawlerStatus === 'False'" class="form-label">
+      <strong class="form-label">Database Status: </strong>
+      <pre>{{ 'Database is Running. However the Crawler is not Running. Your Requests will be stored but not processed.'	}}</pre>
+    </div>
   </div>
-  <div v-if="databaseStatus" class="response-box">
-    <strong>Database Status response:</strong>
-    <pre>{{ databaseStatus }}</pre>
-  </div>
+
 </template>
 
-<script setup lang="ts">
+<script setup>
 
 const message = ref('')
 const loading = ref(false)
@@ -24,37 +38,39 @@ const handleStatus = async () => {
   error.value = false
 
   try {
-    crawlerStatus.value = await fetch('/api/v1/crawler/status/', {
+    crawlerStatus.value = await fetch('/api/v1/status/crawler', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({message: message.value})
-    }).then(response => response.json()).then(response => response[0][0].join(":"))
+      }
+    }).then(response => response.json())
     success.value = true
     message.value = ''
   } catch (err) {
     error.value = true
+    console.error(err)
   } finally {
     loading.value = false
   }
 
   try {
-    databaseStatus.value = await fetch('/api/v1/database/status/' + message.value.toString(), {
+    databaseStatus.value = await fetch('/api/v1/status/database' + message.value.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({message: message.value})
-    }).then(response => response.json()).then(response => response[0][0].join(":"))
+      }
+    }).then(response => response.json())
     success.value = true
     message.value = ''
   } catch (err) {
     error.value = true
+    console.error(err)
   } finally {
     loading.value = false
   }
 }
+
+onMounted(() => handleStatus())
 </script>
 
 <style scoped>

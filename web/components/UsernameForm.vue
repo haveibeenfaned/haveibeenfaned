@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 
 const message = ref('')
 const loading = ref(false)

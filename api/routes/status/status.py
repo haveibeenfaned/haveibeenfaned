@@ -4,17 +4,17 @@ import os
 import psycopg
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
+from fastapi.logger import logger
 
 status_router = APIRouter()
-logger = logging.getLogger("Database logger")
 
 
-@status_router.get("/database/status")
+@status_router.get("/database")
 async def database_status() -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK, content=str(get_status("DATABASE")))
 
 
-@status_router.get("/crawler/status")
+@status_router.get("/crawler")
 async def crawler_status() -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_200_OK, content=str(get_status("CRAWLER")))
 
@@ -26,13 +26,14 @@ def get_status(process: str) -> bool:
                 port=os.getenv("DB_PORT", "5432"),
                 user=os.getenv("DB_USER", "postgres"),
                 password=os.getenv("DB_PASS", "1234"),
-                database=os.getenv("DB_DATABASE", "postgres"),
+                dbname=os.getenv("DB_DATABASE", "postgres"),
         ) as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT status FROM status WHERE process = '{process}'")
                 res = cur.fetchall()
+                logger.info(f"Status: {res}")
 
-                if res: return True
+                if res[0][0]: return True
 
     except Exception as e:
         logging.warning(f"Database error, {e}")

@@ -27,7 +27,7 @@ def app(url: str = "https://www.instagram.com/platinump_____/?hl=en"):
     # beacons / lik.bio / link.tree / allmylinks
 
     username = url.strip().split("/")[3].lower()
-    profiles_path = str(pathlib.Path().absolute()) + "/data/profiles/"
+    profiles_path = str(pathlib.Path().absolute()) + "/.data/profiles/"
     profile_file_path = profiles_path + f"{username}.txt"
 
     # make sure it's saved for testing purposes because IG blocks it otherwise

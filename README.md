@@ -24,3 +24,6 @@ Inspired by have I been pwned, this is the first public record of people that ha
 - Support for looking up x(twitter), facebook and threads
 
 ## Persistance to the hall of shame
+
+## Blockers
+- Figure out a way for selenium to run on servers (akash / gpu based vm maybe?)
