@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup>
 
 const message = ref('')
 const loading = ref(false)
@@ -51,7 +51,7 @@ const handleSubmit = async () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({message: message.value})
-    }).then(response => response.json()).then(response => response[0][0].join(":"))
+    }).then(response => response.json())
     success.value = true
     message.value = ''
   } catch (err) {

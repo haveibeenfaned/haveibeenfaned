@@ -2,6 +2,7 @@ import logging
 import pathlib
 import sys
 
+from database import persist_username
 from src.identify import identify_funny_content_no_provider
 from src.content import selenium_get_content, get_provider_content
 from src.identify import identify_provider, identify_funny_content
@@ -64,6 +65,7 @@ def app(url: str = "https://www.instagram.com/platinump_____/?hl=en"):
                 return False
 
             c = save_content(funny_page, profile_funny_page_file_path)
+            persist_username()
 
             if not c:
                 logger.error("Could not save funny provider page")
@@ -72,7 +74,7 @@ def app(url: str = "https://www.instagram.com/platinump_____/?hl=en"):
             funny_page = open(profile_funny_page_file_path, "r").read()
 
         funny_content.append(identify_funny_content(funny_page))
-    if funny_content:
+    if funny_content[0]:
         logger.info(f"You have been faned: {funny_content}, He/She is for the streets.")
     else:
         logger.info(f"You have not been faned! He/She is a keeper.")
