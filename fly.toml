@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for have-i-been-faned on 2025-04-23T21:30:29+02:00
+# fly.toml app configuration file generated for have-i-been-faned on 2025-07-02T20:27:07+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,9 +7,10 @@ app = 'have-i-been-faned'
 primary_region = 'fra'
 
 [build]
+dockerfile = './DockerfileAPI'
 
 [http_service]
-  internal_port = 8080
+  internal_port = 8000
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
