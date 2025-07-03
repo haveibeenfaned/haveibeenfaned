@@ -18,7 +18,7 @@ app.include_router(url_router, prefix="/scan/url", dependencies=[Depends(verify_
 app.include_router(username_router, prefix="/scan/username")
 app.include_router(status_router, prefix="/status")
 
-origins = os.getenv("ORIGINS", ["http://localhost", "http://localhost:3000"])
+origins = os.getenv("ORIGINS", ["http://localhost", "http://localhost:3000", "http://localhost:8000"])
 
 app.add_middleware(
     CORSMiddleware,

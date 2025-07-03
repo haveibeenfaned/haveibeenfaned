@@ -1,3 +1,4 @@
+import pathlib
 import urllib
 
 from src.content import requests_get_content, as_headless
@@ -7,6 +8,9 @@ from src.content import get_provider_content
 
 from selenium import webdriver
 
+test_directory = "/tests"
+abs_path = str(pathlib.Path().absolute())
+data_path = str(pathlib.Path().absolute())[0:abs_path.index(test_directory)+len(test_directory) ] + "/testdata"
 
 def test_requests_get_content():
     # lnktr.ee
@@ -26,7 +30,7 @@ def test_selenium_get_content():
     # instagram existing
     url = "https://www.instagram.com/platinump_____/?hl=en"
     res = selenium_get_content(url)
-    assert res is not None
+    assert res
 
     # instagram non existant
     url = "https://www.instagram.com/fewjouihgfewhos/?hl=en"
@@ -36,18 +40,17 @@ def test_selenium_get_content():
     # beacons.ai
     url = "https://www.instagram.com/theoriisworld/?hl=en"
     res = selenium_get_content(url)
-    assert res is not None
+    assert res
 
     # lnk.bio
     url = "https://www.instagram.com/msjennafischer/?hl=en"
     res = selenium_get_content(url)
-    assert res is not None
+    assert res
 
     # allmylinks.com TBD
-
     url = "https://www.instagram.com/platinump_____/?hl=en"
     res = selenium_get_content(url)
-    assert res is not None
+    assert res
 
 
 def test_as_headless():
@@ -75,7 +78,6 @@ def test_re_get_content():
     # complex testing since it requires other functions to function hehe
     # src.identify.identify_funny_content + onlyfans
 
-    content = open()
     content_provider = {
         "onlyfans": [
             {"find": r"onlyfans.com/[A-Za-z_-]+", "post": ""}
@@ -84,8 +86,6 @@ def test_re_get_content():
             {"find": r"fansly.com/[A-Za-z_-]+", "post": ""}
         ]
     }
-
-    res = re_get_content(content_provider, )
 
     # src.identify.identify_funny_content + fansly
 
@@ -97,8 +97,6 @@ def test_re_get_content():
             {"find": r"fansly.com/[A-Za-z_-]+", "post": ""}
         ]
     }
-
-    res = re_get_content(content_provider, )
 
     # src.identify.idenfity_funny_content_no_provider
 
@@ -132,6 +130,11 @@ def test_re_get_content():
         ]
     }
 
+    # linktr
+    content = open(f"{data_path}/profiles/linktr/limitlessmacey.txt").read()
+    res = re_get_content(content_provider, content)
 
-    pass
+
+
+    assert res is not None
 

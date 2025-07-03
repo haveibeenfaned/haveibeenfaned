@@ -42,7 +42,7 @@ def app(url: str = "https://www.instagram.com/platinump_____/?hl=en"):
 
     if not content:
         logger.warning("Page empty or does not exist")
-        return False
+        return ["Profile does not exist or cannot be found"]
 
     logger.info(f"Profile found: {url}")
     found_links = identify_provider(content)

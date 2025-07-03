@@ -41,7 +41,8 @@ const handleStatus = async () => {
     crawlerStatus.value = await fetch('/api/v1/status/crawler', {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-'
       }
     }).then(response => response.json())
     success.value = true

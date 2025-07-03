@@ -6,8 +6,8 @@ import requests
 from selenium import webdriver
 
 
-def requests_get_content(url: str) -> str:
-    r = requests.get(url)
+def requests_get_content(url: str, headers: dict = {}) -> str:
+    r = requests.get(url, headers=headers)
     if r.status_code != 200 or r.content is None or r.content == "":
         return ""
 
@@ -25,10 +25,11 @@ def selenium_get_content(url: str, **kwargs) -> str:
     time.sleep(10)
     source = str(driver.page_source)
     driver.quit()
+    time.sleep(10)
 
     del driver
 
-    if not source or "sorry" in source.lower():
+    if not source or "sorry" in source.lower() or "wrong" in source.lower():
         return ""
 
     return source
@@ -63,7 +64,7 @@ def re_get_content(content_providers: dict[str, list[dict[str, Union[str, Callab
 
 
 def get_provider_content(links: list[list]) -> str:
-    content = "" # TODO: Adapt to multiple contents
+    content = ""  # TODO: Adapt to multiple contents
     for link in links:
         if "beacons" in link[0]:
             content = selenium_get_content(link[1], as_headless=False)
@@ -75,6 +76,7 @@ def get_provider_content(links: list[list]) -> str:
             content = selenium_get_content(link[1], as_headless=False)
 
         if "allmylinks" in link[0]:
-            content = selenium_get_content(link[1], as_headless=True)
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+            content = requests_get_content(link[1], headers=headers)
 
     return content
