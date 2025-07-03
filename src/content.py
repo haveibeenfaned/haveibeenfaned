@@ -22,13 +22,13 @@ def selenium_get_content(url: str, **kwargs) -> str:
 
     driver = webdriver.Chrome(options=options)
     driver.get(url)
-    time.sleep(20)
+    time.sleep(10)
     source = str(driver.page_source)
     driver.quit()
 
     del driver
 
-    if not source:
+    if not source or "sorry" in source.lower():
         return ""
 
     return source
@@ -63,7 +63,7 @@ def re_get_content(content_providers: dict[str, list[dict[str, Union[str, Callab
 
 
 def get_provider_content(links: list[list]) -> str:
-    content = ""
+    content = "" # TODO: Adapt to multiple contents
     for link in links:
         if "beacons" in link[0]:
             content = selenium_get_content(link[1], as_headless=False)
