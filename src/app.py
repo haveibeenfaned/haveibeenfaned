@@ -1,5 +1,6 @@
 import logging
 import pathlib
+import re
 import sys
 from typing import List, Union
 
@@ -28,7 +29,7 @@ logger.addHandler(file_handler)
 # TODO: Will probably have to switch to a user inputs a username then check if it exists in providers
 
 
-def app(url: str = "https://www.instagram.com/platinump_____"):
+def app(url: str = "https://www.instagram.com/platinump__"):
     # beacons / lik.bio / link.tree / allmylinks
 
     username = url.strip().split("/")[3].lower()
@@ -38,8 +39,8 @@ def app(url: str = "https://www.instagram.com/platinump_____"):
 
     # make sure it's saved for testing purposes because IG blocks it otherwise
     if file_is_local(profile_file_path):
-        exception_response = ""
         content = open(profile_file_path, "r").read()
+        exception_response = re_get_exceptions([instagram_provider], content)
     else:
         content = selenium_get_content(url, as_headless=False)
         exception_response = re_get_exceptions([instagram_provider], content)
@@ -101,3 +102,6 @@ def app(url: str = "https://www.instagram.com/platinump_____"):
         logger.info(f"You have not been faned! He/She is a keeper.")
 
     return response
+
+if __name__ == "__main__":
+    app()

@@ -48,7 +48,9 @@ def re_get_exceptions(content_providers: List[Provider], content: str) -> str:
     for provider in content_providers:
         for exception in provider.exceptions:
             ex = re.findall(exception["find"], content)
-            if ex: ex = exception["response"]
+            if ex:
+                ex = exception["response"]
+                break
 
     return ex
 
