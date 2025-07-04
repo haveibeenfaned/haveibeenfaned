@@ -85,6 +85,7 @@ def app(url: str = "https://www.instagram.com/platinump__"):
             c = save_content(funny_page, profile_funny_page_file_path)
             if not c:
                 logger.error("Could not save funny provider page")
+                return {"exception": "Internal Server Error", "isException": True, "profile": profile.__dict__}
         else:
             funny_page = open(profile_funny_page_file_path, "r").read()
 
@@ -102,6 +103,3 @@ def app(url: str = "https://www.instagram.com/platinump__"):
         logger.info(f"You have not been faned! He/She is a keeper.")
 
     return response
-
-if __name__ == "__main__":
-    app()
