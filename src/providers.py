@@ -3,7 +3,7 @@ import urllib
 from src.models import Provider
 
 lnktr_provider = Provider(
-    name="lnktr",
+    name="lnktree",
     link_finders=[
         {"find": r"linktr.ee%2F[a-zA-Z_-]+", "post": urllib.parse.unquote},  # href={enconded_link}
         {"find": r"linktr.ee/[a-zA-Z_-]+", "post": ""}  # <span>{link}<span>,

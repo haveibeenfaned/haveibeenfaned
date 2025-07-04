@@ -84,8 +84,9 @@ def get_provider_content(url: str) -> str:
     if "beacons" in url:
         content = selenium_get_content(url, as_headless=False)
 
-    if "linktree" in url:
-        content = requests_get_content(url)
+    if "lnktree" in url:
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+        content = requests_get_content(url, headers=headers)
 
     if "lnk" in url:
         content = selenium_get_content(url, as_headless=False)
