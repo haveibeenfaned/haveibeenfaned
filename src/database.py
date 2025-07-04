@@ -2,9 +2,9 @@ import os
 from typing import Union
 
 import psycopg
-from psycopg.rows import DictRow
+from psycopg.rows import dict_row
 
-from models import Profile
+from src.models import Profile
 
 host = os.getenv("DB_HOST", "localhost")
 dbname = os.getenv("DB_NAME", "postgres")
@@ -14,8 +14,8 @@ password = os.getenv("DB_PASSWORD", "1234")
 def save_profile(profile: Profile) -> Union[Profile, bool]:
 
     try:
-        with psycopg.connect(host=host, dbname=dbname, user=user, password=password) as conn:
-            with conn.cursor(row_factory=DictRow) as cursor:
+        with psycopg.connect(host=host, dbname=dbname, user=user, password=password, row_factory=dict_row) as conn:
+            with conn.cursor() as cursor:
                 if profile_exists(profile.handle, cursor):
                     update_sql("profiles", cursor, **profile.__dict__)
                 else:

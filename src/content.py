@@ -80,7 +80,7 @@ def re_get_content(content_providers: List[Provider],
 
 
 def get_provider_content(url: str) -> str:
-    content = ""  # TODO: Adapt to multiple contents
+    content = ""
     if "beacons" in url:
         content = selenium_get_content(url, as_headless=False)
 

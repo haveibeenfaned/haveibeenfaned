@@ -4,7 +4,7 @@ import sys
 import time
 from typing import List, Union
 
-from database import save_profile
+from src.database import save_profile
 from src.models import Profile
 from src.content import re_get_exceptions
 from src.content import selenium_get_content, get_provider_content
@@ -19,15 +19,6 @@ file_handler = logging.FileHandler("crawler.log")
 
 logger.addHandler(stream_handler)
 logger.addHandler(file_handler)
-
-
-# TODO: If no provider found -> return @s linked so you can input those instead on the front end things
-# TODO: Add search mode + append mode
-# TODO: Add database integration
-# TODO: Add tests
-# TODO: Add base infra
-# TODO: Add github actions for tests / base infra deployments
-# TODO: Will probably have to switch to a user inputs a username then check if it exists in providers
 
 
 def app(url: str = "https://www.instagram.com/platinump____"):
