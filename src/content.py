@@ -1,9 +1,12 @@
+import os
 import re
 import time
-from typing import Callable, Union
+from typing import List
 
 import requests
 from selenium import webdriver
+
+from providers import Provider
 
 
 def requests_get_content(url: str, headers: dict = {}) -> str:
@@ -14,41 +17,53 @@ def requests_get_content(url: str, headers: dict = {}) -> str:
     return r.content.decode("utf-8")
 
 
+def as_headless(options: webdriver.ChromeOptions) -> webdriver.ChromeOptions:
+    options.add_argument("--headless=new")
+    return options
+
+
 def selenium_get_content(url: str, **kwargs) -> str:
     options = webdriver.ChromeOptions()
 
     if kwargs.get("as_headless", ""):
         options = as_headless(options)
 
+    user_data_dir = os.getenv("USERDATADIR", '"/Users/d37998/Library/Application Support/Google/Chrome/Default"')
+    options.add_argument(f'--user-data-dir={user_data_dir}')
     driver = webdriver.Chrome(options=options)
+    time.sleep(5)
+    driver.get("https://www.instagram.com/")
+    time.sleep(3)
     driver.get(url)
     time.sleep(10)
-    source = str(driver.page_source)
+    source = str(driver.page_source).lower()
+    time.sleep(2)
     driver.quit()
-    time.sleep(10)
-
-    del driver
-
-    if not source or "sorry" in source.lower() or "wrong" in source.lower():
-        return ""
 
     return source
 
 
-def as_headless(options: webdriver.ChromeOptions) -> webdriver.ChromeOptions:
-    options.add_argument("--headless=new")
-    return options
+def re_get_exceptions(content_providers: List[Provider], content: str) -> str:
+    ex = ""
+    for provider in content_providers:
+        for exception in provider.exceptions:
+            ex = re.findall(exception["find"], content)
+            if ex: ex = exception["response"]
+
+    return ex
 
 
 # Nice right?
-def re_get_content(content_providers: dict[str, list[dict[str, Union[str, Callable[[str], str]]]]],
+def re_get_content(content_providers: List[Provider],
                    content: str) -> list:
     found_providers = []
 
-    for provider, patterns in content_providers.items():
+    for provider in content_providers:
 
-        for pattern in patterns:
+        for pattern in provider.link_finders:
             link = re.findall(pattern["find"], content)
+
+            # check for exceptions such as profile non existant (Provider.exceptions)
 
             if not link:
                 continue
@@ -63,20 +78,19 @@ def re_get_content(content_providers: dict[str, list[dict[str, Union[str, Callab
     return found_providers
 
 
-def get_provider_content(links: list[list]) -> str:
+def get_provider_content(url: str) -> str:
     content = ""  # TODO: Adapt to multiple contents
-    for link in links:
-        if "beacons" in link[0]:
-            content = selenium_get_content(link[1], as_headless=False)
+    if "beacons" in url:
+        content = selenium_get_content(url, as_headless=False)
 
-        if "linktr" in link[0]:
-            content = requests_get_content(link[1])
+    if "linktree" in url:
+        content = requests_get_content(url)
 
-        if "lnk" in link[0]:
-            content = selenium_get_content(link[1], as_headless=False)
+    if "lnk" in url:
+        content = selenium_get_content(url, as_headless=False)
 
-        if "allmylinks" in link[0]:
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-            content = requests_get_content(link[1], headers=headers)
+    if "allmylinks" in url:
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+        content = requests_get_content(url, headers=headers)
 
     return content
