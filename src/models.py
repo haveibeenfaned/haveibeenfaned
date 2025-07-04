@@ -8,7 +8,7 @@ class Profile:
     handle: str
     onlyfans_url: str = None
     fansly_url: str = None
-    lnktree_url: str = None
+    linktree_url: str = None
     beacons_url: str = None
     lnk_url: str = None
     allmylinks_url: str = None

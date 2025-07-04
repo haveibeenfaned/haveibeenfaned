@@ -11,6 +11,7 @@ from src.providers import Provider
 
 def requests_get_content(url: str, headers: dict = {}) -> str:
     r = requests.get(url, headers=headers)
+    print(r)
     if r.status_code != 200 or r.content is None or r.content == "":
         return ""
 
@@ -84,8 +85,9 @@ def get_provider_content(url: str) -> str:
     if "beacons" in url:
         content = selenium_get_content(url, as_headless=False)
 
-    if "lnktree" in url:
+    if "linktree" in url:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+        print(" I come here")
         content = requests_get_content(url, headers=headers)
 
     if "lnk" in url:

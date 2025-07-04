@@ -66,10 +66,8 @@ def app(url: str = "https://www.instagram.com/platinump____"):
         profile_funny_page_file_path = profiles_path + f"{username}-{provider.name}.txt"
 
         if not file_is_local(profile_funny_page_file_path):
-
             funny_page = get_provider_content(link[1])
             exception_response = re_get_exceptions([provider], funny_page)
-
             if not funny_page or exception_response:
                 logger.info("No content found in funny provider link, strange")
                 return {"exception": exception_response, "isException": True, "profile": profile.__dict__}
