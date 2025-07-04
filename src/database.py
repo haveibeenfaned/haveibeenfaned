@@ -47,10 +47,10 @@ def update_sql(table: str, cursor: psycopg.Cursor, **kwargs) -> bool:
         y = f"'{y}'" if y is not None else "NULL"
         query += f" {x} = {y}, "
 
-    query += " updated_at = now() "
+    query += " updated_at = now() " # add updated_at
     query += f" WHERE handle = '{kwargs["handle"]}'"
 
-    cursor.execute(query) # add created at
+    cursor.execute(query)
 
     return True
 
