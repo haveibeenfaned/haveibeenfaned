@@ -6,7 +6,7 @@ from typing import List
 import requests
 from selenium import webdriver
 
-from providers import Provider
+from src.providers import Provider
 
 
 def requests_get_content(url: str, headers: dict = {}) -> str:

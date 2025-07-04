@@ -1,6 +1,6 @@
 import urllib
 
-from models import Provider
+from src.models import Provider
 
 lnktr_provider = Provider(
     name="lnktr",

@@ -3,7 +3,7 @@ import pathlib
 import sys
 from typing import List, Union
 
-from models import Profile
+from src.models import Profile
 from src.content import re_get_exceptions
 from src.content import selenium_get_content, get_provider_content
 from src.identify import identify_provider, identify_funny_content
@@ -32,7 +32,7 @@ def app(url: str = "https://www.instagram.com/platinump_____"):
     # beacons / lik.bio / link.tree / allmylinks
 
     username = url.strip().split("/")[3].lower()
-    profiles_path = str(pathlib.Path().absolute()) + "/../.data/profiles/"
+    profiles_path = str(pathlib.Path().absolute()) + "/.data/profiles/"
     fname = f"{username}.txt"
     profile_file_path = profiles_path + fname
 
