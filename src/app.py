@@ -4,6 +4,7 @@ import sys
 import time
 from typing import List, Union
 
+from database import save_profile
 from src.models import Profile
 from src.content import re_get_exceptions
 from src.content import selenium_get_content, get_provider_content
@@ -95,7 +96,10 @@ def app(url: str = "https://www.instagram.com/platinump____"):
                 profile.funny_page = True
                 profile.__setattr__(f"{provider[0].name}_url", provider[1])
 
-    save_profile()
+    res = save_profile(profile)
+    if not res:
+        logger.error("Could not save profile in DB, bad news")
+        return {"exception": "Internal Database Error", "isException": True, "profile": profile.__dict__}
 
     if profile.funny_page:
         response = {"exception": exception_response, "isException": False, "profile": profile.__dict__}
