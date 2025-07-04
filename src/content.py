@@ -51,7 +51,6 @@ def re_get_exceptions(content_providers: List[Provider], content: str) -> str:
             if ex:
                 ex = exception["response"]
                 break
-
     return ex
 
 

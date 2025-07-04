@@ -27,3 +27,12 @@ Inspired by have I been pwned, this is the first public record of people that ha
 
 ## Blockers
 - Figure out a way for selenium to run on servers (akash / gpu based vm maybe?)
+
+## Setup
+- Copy your Chrome profiles path as an argument to the rasp
+- Use the new folder path as an argument option in WebDriver
+- Initiaize driver and save login in IG
+- Start up the crawler
+
+- API needs an API key which can be set up with a SECRET in fly.io
+- Postgresql needs to be active for messages to go through

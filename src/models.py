@@ -6,13 +6,13 @@ from typing import Optional, List, Dict
 class Profile:
     ig_url: str
     handle: str
-    onlyfans_url: str = ""
-    fasnly_url: str = ""
-    lnktree_url: str = ""
-    beacons_url: str = ""
-    lnk_url: str = ""
-    allmylinks_url: str = ""
-    fname: str = ""
+    onlyfans_url: str = None
+    fansly_url: str = None
+    lnktree_url: str = None
+    beacons_url: str = None
+    lnk_url: str = None
+    allmylinks_url: str = None
+    fname: str = None
     funny_page: bool = False
 
 

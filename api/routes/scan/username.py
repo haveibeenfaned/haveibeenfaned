@@ -8,7 +8,7 @@ username_router = APIRouter()
 
 @username_router.post("/{username}")
 async def scan_username(username: str) -> JSONResponse:
-    res = finder(f"https://www.instagram.com/{username}/?hl=en")
+    res = finder(f"https://www.instagram.com/{username}")
     print(res)
     if not username:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=username)

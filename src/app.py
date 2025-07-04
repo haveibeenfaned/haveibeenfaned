@@ -1,7 +1,7 @@
 import logging
 import pathlib
-import re
 import sys
+import time
 from typing import List, Union
 
 from src.models import Profile
@@ -29,7 +29,7 @@ logger.addHandler(file_handler)
 # TODO: Will probably have to switch to a user inputs a username then check if it exists in providers
 
 
-def app(url: str = "https://www.instagram.com/platinump__"):
+def app(url: str = "https://www.instagram.com/platinump____"):
     # beacons / lik.bio / link.tree / allmylinks
 
     username = url.strip().split("/")[3].lower()
@@ -95,6 +95,8 @@ def app(url: str = "https://www.instagram.com/platinump__"):
                 profile.funny_page = True
                 profile.__setattr__(f"{provider[0].name}_url", provider[1])
 
+    save_profile()
+
     if profile.funny_page:
         response = {"exception": exception_response, "isException": False, "profile": profile.__dict__}
         logger.info(f"You have been faned! He/She is for the streets.")
@@ -103,3 +105,8 @@ def app(url: str = "https://www.instagram.com/platinump__"):
         logger.info(f"You have not been faned! He/She is a keeper.")
 
     return response
+
+
+def generate_consumption(postgres_conn):
+    yield postgres_conn.poll()
+    time.sleep(3)
