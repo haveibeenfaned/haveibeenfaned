@@ -1,7 +1,6 @@
 import logging
 import pathlib
 import sys
-import time
 from typing import List, Union
 
 from src.database import save_profile
@@ -21,7 +20,7 @@ logger.addHandler(stream_handler)
 logger.addHandler(file_handler)
 
 
-def app(url: str = "https://www.instagram.com/platinump____"):
+def app(url: str = "https://www.instagram.com/limitlessmacey"):
     # beacons / lik.bio / link.tree / allmylinks
 
     username = url.strip().split("/")[3].lower()
@@ -98,8 +97,3 @@ def app(url: str = "https://www.instagram.com/platinump____"):
         logger.info(f"You have not been faned! He/She is a keeper.")
 
     return response
-
-
-def generate_consumption(postgres_conn):
-    yield postgres_conn.poll()
-    time.sleep(3)
