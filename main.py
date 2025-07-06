@@ -2,10 +2,7 @@ import uvicorn
 
 from api.app import app
 
-
-def main():
-    uvicorn.run(app, port=8080)
-
-
-if __name__ == "__main__":
-    main()
+# fastapi dev / prod runs this imported app
+# TODO next: Split running API / Crawler via Postgres (define interfacing)
+# TODO: Fix frontend for different kind of responses from API
+# TODO: Fix API for different kind of responses from Crawler
