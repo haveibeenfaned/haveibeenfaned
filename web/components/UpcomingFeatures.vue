@@ -7,7 +7,7 @@
 
 Top 10 Upcoming Features:
   </pre>
-  <ol class="pl-20 list-decimal text-slate-300 font-mono md:text-base sd:text-sm">
+  <ol class="sd:pl-10 md:pl-20 list-decimal text-slate-300 font-mono md:text-base sd:text-sm md:max-w-4xl">
     <li>Support for Twitter and Threads Handles (only Instagram registered)</li>
     <li>Support for more link agreggators</li>
     <li>Support for more clones of OnlyFans / Fansly</li>
