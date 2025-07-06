@@ -1,23 +1,19 @@
 <template>
-  <div class="form-box">
-    <strong class="form-label">Crawler Status:</strong>
-    <div v-if="crawlerStatus === 'False'" class="form-label">
-      <pre>{{ 'Crawler is either Stopped / Paused / On Maintenance. Your requests will be processed at a later date!'	}}</pre>
+  <div class="grid grid-cols-2 grid-rows-1 justify-items-center">
+    <div v-if="crawlerStatus === 'False'" class="grid-col-start-1">
+      <pre class="text-slate-300">Crawler 🔴</pre>
     </div>
     <div v-if="crawlerStatus === 'True'">
-      <pre>{{ 'Crawler is Running. Your requests will be processed in real time!'	}}</pre>
+      <pre class="text-slate-300">Crawler 🟢</pre>
     </div>
-    <div v-if="databaseStatus === 'False'" class="form-label">
-      <strong class="form-label">Database Status: </strong>
-      <pre>{{ 'Database is either Stopped / Paused / On Maintenance. Your requests will be processed at a later date!'	}}</pre>
+    <div v-if="databaseStatus === 'False'" class="grid-col-start-2">
+      <pre class="text-slate-300">Database 🔴</pre>
     </div>
     <div v-if="databaseStatus === 'True' && crawlerStatus === 'True'" class="form-label">
-      <strong class="form-label">Database Status: </strong>
-      <pre>{{ 'Database is Running. Your requests will be stored and processed in real time!'	}}</pre>
+      <pre class="text-slate-300">Database 🟢</pre>
     </div>
     <div v-if="databaseStatus === 'True' && crawlerStatus === 'False'" class="form-label">
-      <strong class="form-label">Database Status: </strong>
-      <pre>{{ 'Database is Running. However the Crawler is not Running. Your Requests will be stored but not processed.'	}}</pre>
+      <pre class="text-slate-300">Database 🟠</pre>
     </div>
   </div>
 

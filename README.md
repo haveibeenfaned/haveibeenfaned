@@ -31,7 +31,7 @@ Inspired by have I been pwned, this is the first public record of people that ha
 ## Setup
 - Copy your Chrome profiles path as an argument to the rasp
 - Use the new folder path as an argument option in WebDriver
-- Initiaize driver and save login in IG
+- Initialise driver and save login in IG
 - Start up the crawler
 
 - API needs an API key which can be set up with a SECRET in fly.io

@@ -1,34 +1,36 @@
 <template>
-  <div class="form-container">
-    <form @submit.prevent="handleSubmit" class="form-box">
-      <label for="message" class="form-label">Check in the Hall of Shame</label>
-      <input
-          id="message"
-          v-model="message"
-          type="text"
-          maxlength="256"
-          class="form-input"
-          placeholder="Enter your message"
-          required
-      />
-      <button
-          type="submit"
-          class="submit-button"
-          :disabled="loading"
-      >
-        {{ loading ? 'Sending...' : 'Submit' }}
-      </button>
-
-      <p v-if="success" class="success-message">Message sent successfully!</p>
-      <p v-if="error" class="error-message">Error sending message.</p>
-
-      <div v-if="responseText" class="response-box">
-        <strong>Server response:</strong>
-        <pre>{{ responseText }}</pre>
+  <form @submit.prevent="handleSubmit">
+    <div class="grid grid-cols-1 grid-rows-6 gap-2 py-5 md:max-w-screen-2xl sd:max-w-screen-sm">
+      <div class="row-span-2 text-center md:text-2xl sd:text-xl font-mono">
+        <label for="message" class="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-500 inline-block text-transparent bg-clip-text">Check in the Hall of Shame</label>
       </div>
+      <div class="row-span-2 py-2">
+        <input
+            id="message"
+            v-model="message"
+            type="text"
+            maxlength="256"
+            class="bg-slate-500 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 text-center"
+            placeholder="Type an existing Instagram profile handle"
+            required
+        />
+      </div>
+      <div class="row-span-2 text-center py-2 md:text-lg sd:text-base">
+        <button
+            type="submit"
+            class="submit-button bg-blue-500 hover:bg-blue-700 text-slate-300 font-bold py-2 px-4 rounded-full"
+            :disabled="loading">
+          {{ loading ? 'Sending...' : 'Submit' }}
+        </button>
+      </div>
+    </div>
 
-    </form>
-  </div>
+    <div v-if="responseText" class="response-box">
+      <strong>Server response:</strong>
+      <pre>{{ JSON.stringify(responseText) }}</pre>
+    </div>
+
+  </form>
 </template>
 
 <script setup>
