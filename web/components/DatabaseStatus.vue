@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-2 grid-rows-1 justify-items-center">
+  <div class="grid grid-cols-2 grid-rows-1 justify-items-center py-5">
     <div v-if="crawlerStatus === 'False'" class="grid-col-start-1">
       <pre class="text-slate-300">Crawler 🔴</pre>
     </div>
@@ -27,6 +27,7 @@ const success = ref(false)
 const error = ref(false)
 let crawlerStatus = ref('')
 let databaseStatus = ref('')
+let apiKey = 'API_KEY' in process.env ? process.env.API_KEY : 'TEST'
 
 const handleStatus = async () => {
   loading.value = true
@@ -37,7 +38,8 @@ const handleStatus = async () => {
     crawlerStatus.value = await fetch('/api/v1/status/crawler', {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-API-KEY': apiKey
       }
     }).then(response => response.json())
     success.value = true
@@ -53,7 +55,8 @@ const handleStatus = async () => {
     databaseStatus.value = await fetch('/api/v1/status/database' + message.value.toString(), {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-API-KEY': apiKey
       }
     }).then(response => response.json())
     success.value = true
