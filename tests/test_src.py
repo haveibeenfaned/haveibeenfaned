@@ -1,16 +1,17 @@
 import pathlib
 import urllib
 
+from selenium import webdriver
+
+from src.content import get_provider_content
+from src.content import re_get_content
 from src.content import requests_get_content, as_headless
 from src.content import selenium_get_content
-from src.content import re_get_content
-from src.content import get_provider_content
-
-from selenium import webdriver
 
 test_directory = "/tests"
 abs_path = str(pathlib.Path().absolute())
-data_path = str(pathlib.Path().absolute())[0:abs_path.index(test_directory)+len(test_directory) ] + "/testdata"
+data_path = str(pathlib.Path().absolute())[0:abs_path.index(test_directory) + len(test_directory)] + "/testdata"
+
 
 def test_requests_get_content():
     # lnktr.ee
@@ -134,7 +135,4 @@ def test_re_get_content():
     content = open(f"{data_path}/profiles/linktr/limitlessmacey.txt").read()
     res = re_get_content(content_provider, content)
 
-
-
     assert res is not None
-

@@ -1,5 +1,4 @@
 import os
-from http.client import HTTPException
 from typing import Union
 
 from fastapi import Security, status

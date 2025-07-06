@@ -2,7 +2,9 @@
   <form @submit.prevent="handleSubmit">
     <div class="grid grid-cols-1 grid-rows-8 gap-2 py-5 md:max-w-screen-2xl sd:max-w-screen-sm">
       <div class="row-span-2 text-center md:text-2xl sd:text-xl font-mono">
-        <label for="message" class="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-500 inline-block text-transparent bg-clip-text">Check in the Hall of Shame</label>
+        <label for="message"
+               class="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-500 inline-block text-transparent bg-clip-text">Check
+          in the Hall of Shame</label>
       </div>
       <div class="row-span-2 py-2">
         <input
@@ -46,7 +48,6 @@ const handleSubmit = async () => {
   loading.value = true
   success.value = false
   error.value = false
-
 
 
   try {

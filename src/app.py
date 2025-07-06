@@ -3,11 +3,11 @@ import pathlib
 import sys
 from typing import List, Union
 
-from src.database import save_profile
-from src.models import Profile
 from src.content import re_get_exceptions
 from src.content import selenium_get_content, get_provider_content
+from src.database import save_profile
 from src.identify import identify_provider, identify_funny_content
+from src.models import Profile
 from src.providers import instagram_provider, Provider
 from src.utils import file_is_local, save_content
 

@@ -11,8 +11,8 @@ dbname = os.getenv("DB_NAME", "postgres")
 user = os.getenv("DB_USER", "postgres")
 password = os.getenv("DB_PASSWORD", "1234")
 
-def save_profile(profile: Profile) -> Union[Profile, bool]:
 
+def save_profile(profile: Profile) -> Union[Profile, bool]:
     try:
         with psycopg.connect(host=host, dbname=dbname, user=user, password=password, row_factory=dict_row) as conn:
             with conn.cursor() as cursor:
@@ -38,6 +38,7 @@ def insert_sql(table: str, cursor: psycopg.Cursor, **kwargs) -> bool:
 
     return True
 
+
 def update_sql(table: str, cursor: psycopg.Cursor, **kwargs) -> bool:
     query = f"UPDATE {table} SET"
     for x, y in zip(kwargs.keys(), kwargs.values()):
@@ -47,12 +48,13 @@ def update_sql(table: str, cursor: psycopg.Cursor, **kwargs) -> bool:
         y = f"'{y}'" if y is not None else "NULL"
         query += f" {x} = {y}, "
 
-    query += " updated_at = now() " # add updated_at
+    query += " updated_at = now() "  # add updated_at
     query += f" WHERE handle = '{kwargs["handle"]}'"
 
     cursor.execute(query)
 
     return True
+
 
 def profile_exists(handle: str, cursor: psycopg.Cursor) -> bool:
     cursor.execute(f"SELECT * FROM profiles WHERE handle = '{handle}'")

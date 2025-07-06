@@ -1,16 +1,14 @@
 import logging
 import os
 
+from api.routes.scan.url import url_router
+from api.routes.scan.username import username_router
+from api.routes.status.status import status_router
+from api.utils.api_key import verify_api_key
 from fastapi import FastAPI, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-
-from api.routes.scan.url import url_router
-from api.routes.scan.username import username_router
-from api.utils.api_key import verify_api_key
 from fastapi.staticfiles import StaticFiles
-
-from api.routes.status.status import status_router
 
 logger = logging.Logger("app-logger")
 app = FastAPI(root_path="/api/v1", dependencies=[Depends(verify_api_key)])

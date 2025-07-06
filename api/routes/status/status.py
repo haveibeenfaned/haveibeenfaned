@@ -3,8 +3,8 @@ import os
 
 import psycopg
 from fastapi import APIRouter, status
-from fastapi.responses import JSONResponse
 from fastapi.logger import logger
+from fastapi.responses import JSONResponse
 
 status_router = APIRouter()
 

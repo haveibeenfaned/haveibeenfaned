@@ -4,7 +4,7 @@
         class="text-center font-mono font-light italic py-10">
       <!-- change to css property -->
       <p id="title"
-          class="sd:text-lg md:text-6xl bg-gradient-to-r from-slate-300 via-blue-250 to-blue-500 inline-block text-transparent bg-clip-text">
+         class="sd:text-lg md:text-6xl bg-gradient-to-r from-slate-300 via-blue-250 to-blue-500 inline-block text-transparent bg-clip-text">
         HAVE I BEEN FANED</p>
     </div>
 
