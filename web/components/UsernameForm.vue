@@ -32,8 +32,10 @@
         <pre> {{ exceptedMessage }} 😱</pre>
       </div>
       <div v-if="excepted === false && isFunny === true">
-        <pre>Fans page detected, respect rejected 😎: OnlyFans: {{ onlyFansUrl }}</pre>
+        <pre>Fans page detected, respect rejected 😎: </pre>
+        <pre>OnlyFans: {{ onlyFansUrl }}</pre>
         <pre>Fansly: {{ fanslyUrl }}</pre>
+        <pre>Fanvue: {{ fanvueUrl }}</pre>
       </div>
       <div v-if="excepted === false && isFunny === false && responseText !== ''">
         <pre>Fans page NOT detected, respect NOT rejected 😎: @{{ handleName }}</pre>
@@ -59,6 +61,7 @@ const isFunny = ref(false)
 const exceptedMessage = ref('')
 const onlyFansUrl = ref('')
 const fanslyUrl = ref('')
+const fanvueUrl = ref('')
 const handleName = ref('')
 
 const handleSubmit = async () => {
@@ -84,6 +87,7 @@ const handleSubmit = async () => {
     onlyFansUrl.value = responseText.value["profile"]["onlyfans_url"]
     fanslyUrl.value = responseText.value["profile"]["fansly_url"]
     handleName.value = responseText.value["profile"]["handle"]
+    fanvueUrl.value = responseText.value["profile"]["fanvue_url"]
 
   } catch (err) {
     error.value = true
