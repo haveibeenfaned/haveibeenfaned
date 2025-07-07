@@ -20,9 +20,9 @@ logger.addHandler(stream_handler)
 logger.addHandler(file_handler)
 
 
-def app(url: str = "https://www.instagram.com/limitlessmacey"):
+def app(handle: str = "limitlessmacey"):
     # beacons / lik.bio / link.tree / allmylinks
-
+    url = f"https://www.instagram.com/{handle}"
     username = url.strip().split("/")[3].lower()
     profiles_path = str(pathlib.Path().absolute()) + "/.data/profiles/"
     fname = f"{username}.txt"
