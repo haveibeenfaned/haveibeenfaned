@@ -1,6 +1,6 @@
 <template>
 
-  <pre class="text-slate-300 py-5 font-bold">HOWTO:</pre>
+  <pre class="text-slate-300 py-10 font-bold pl-5">HOWTO:</pre>
   <ol class="sd:pl-10 md:pl-20 list-decimal text-slate-300 font-mono md:text-base sd:text-sm md:max-w-4xl">
     <li>Go to the desired IG Profile (unless you already know their Handle)</li>
     <li>Copy their Handle ( the name left of the Follow button )</li>

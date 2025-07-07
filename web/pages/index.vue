@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gradient-to-t from-slate-800 via-slate-900 to-slate-950 flex flex-col items-center p-5 bg-full">
+  <div class="bg-gradient-to-t from-slate-800 via-slate-900 to-slate-950 p-5 bg-full">
     <div
         class="text-center font-mono font-light italic py-10">
       <!-- change to css property -->
@@ -8,9 +8,9 @@
         HAVE I BEEN FANED</p>
     </div>
 
-    <UsernameForm/>
-    <DatabaseStatus/>
-    <HowTo/>
-    <UpcomingFeatures/>
+    <UsernameForm class="flex flex-col items-center "/>
+    <DatabaseStatus class="flex flex-col items-center"/>
+    <HowTo class="flex flex-col items-center"/>
+    <UpcomingFeatures class="flex flex-col items-center"/>
   </div>
 </template>
