@@ -22,7 +22,11 @@ def send_message(handle: str):
             for res in conn.notifies(timeout=None):
                 print(res)
                 as_dict = json.loads(res.payload)
-                profile = Profile(**as_dict["profile"])
+
+                if as_dict["isException"]:
+                    profile = Profile(ig_url="", handle=handle)
+                else:
+                    profile = Profile(**as_dict["profile"])
 
                 if profile.handle == handle:
                     return as_dict

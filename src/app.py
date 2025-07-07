@@ -38,7 +38,7 @@ def app(handle: str = "limitlessmacey"):
 
     if exception_response:
         logger.warning(exception_response)
-        return exception_response
+        return {"exception": exception_response, "isException": True, "profile": {}}
 
     saved = save_content(content, profile_file_path)
     profile = Profile(

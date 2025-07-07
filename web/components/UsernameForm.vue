@@ -27,9 +27,20 @@
       </div>
     </div>
 
-    <div v-if="responseText" class="response-box">
-      <strong>Server response:</strong>
-      <pre>{{ JSON.stringify(responseText) }}</pre>
+    <div class="text-slate-300 md:text-base sd:text-sm md:max-w-screen-2xl sd:max-w-screen-sm text-center font-bold">
+      <div v-if="excepted === true">
+        <pre> {{ exceptedMessage }} 😱</pre>
+      </div>
+      <div v-if="excepted === false && isFunny === true">
+        <pre>Fans page detected, respect rejected 😎: OnlyFans: {{ onlyFansUrl }}</pre>
+        <pre>Fansly: {{ fanslyUrl }}</pre>
+      </div>
+      <div v-if="excepted === false && isFunny === false">
+        <pre>Fans page NOT detected, respect NOT rejected 😎: @{{ handleName }}</pre>
+      </div>
+      <div v-if="error === true">
+        <pre>Error with the front end or something, look i'm not a front end dev ok, I am trying my best here</pre>
+      </div>
     </div>
 
   </form>
@@ -43,6 +54,12 @@ const success = ref(false)
 const error = ref(false)
 let responseText = ref('')
 let apiKey = 'API_KEY' in process.env ? process.env.API_KEY : 'TEST'
+const excepted = ref(false)
+const isFunny = ref(false)
+const exceptedMessage = ref('')
+const onlyFansUrl = ref('')
+const fanslyUrl = ref('')
+const handleName = ref('')
 
 const handleSubmit = async () => {
   loading.value = true
@@ -61,6 +78,13 @@ const handleSubmit = async () => {
     }).then(response => response.json())
     success.value = true
     message.value = ''
+    excepted.value = responseText.value["isException"]
+    exceptedMessage.value = responseText.value["exception"]
+    isFunny.value = responseText.value["profile"]["funny_page"]
+    onlyFansUrl.value = responseText.value["profile"]["onlyfans_url"]
+    fanslyUrl.value = responseText.value["profile"]["fansly_url"]
+    handleName.value = responseText.value["profile"]["handle"]
+
   } catch (err) {
     error.value = true
   } finally {
