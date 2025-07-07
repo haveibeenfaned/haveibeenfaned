@@ -1,7 +1,6 @@
 import logging
 import os
 
-from api.routes.scan.url import url_router
 from api.routes.scan.username import username_router
 from api.routes.status.status import status_router
 from api.utils.api_key import verify_api_key
@@ -12,7 +11,6 @@ from fastapi.staticfiles import StaticFiles
 
 logger = logging.Logger("app-logger")
 app = FastAPI(root_path="/api/v1", dependencies=[Depends(verify_api_key)])
-app.include_router(url_router, prefix="/scan/url")
 app.include_router(username_router, prefix="/scan/username")
 app.include_router(status_router, prefix="/status")
 

@@ -1,10 +1,11 @@
 attrs==25.3.0
 cryptography==44.0.2
 fastapi==0.115.12
+fastapi[standard]
+psycopg-binary
 pyOpenSSL==25.0.0
 PySocks==1.7.1
 requests==2.32.3
-selenium==4.31.0
 uvicorn==0.34.2
 psycopg~=3.2.9
 pip~=25.1.1
