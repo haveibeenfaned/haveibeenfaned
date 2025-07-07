@@ -35,7 +35,7 @@
         <pre>Fans page detected, respect rejected 😎: OnlyFans: {{ onlyFansUrl }}</pre>
         <pre>Fansly: {{ fanslyUrl }}</pre>
       </div>
-      <div v-if="excepted === false && isFunny === false">
+      <div v-if="excepted === false && isFunny === false && responseText !== ''">
         <pre>Fans page NOT detected, respect NOT rejected 😎: @{{ handleName }}</pre>
       </div>
       <div v-if="error === true">
