@@ -12,6 +12,7 @@ class Profile:
     beacons_url: str = None
     lnk_url: str = None
     allmylinks_url: str = None
+    fanvue_url: str = None
     fname: str = None
     funny_page: bool = False
 

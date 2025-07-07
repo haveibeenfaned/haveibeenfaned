@@ -18,7 +18,8 @@ def identify_provider(content: str) -> list[Optional[list]]:
 def identify_funny_content(content: str) -> list:
     content_providers = [
         onlyfans_provider,
-        fansly_provider
+        fansly_provider,
+        fanvue_provider
     ]
 
     return re_get_content(content_providers, content)

@@ -20,11 +20,11 @@ logger.addHandler(stream_handler)
 logger.addHandler(file_handler)
 
 
-def app(handle: str = "limitlessmacey"):
+def app(handle: str = "lauramedinarb"):
     # beacons / lik.bio / link.tree / allmylinks
     url = f"https://www.instagram.com/{handle}"
     username = url.strip().split("/")[3].lower()
-    profiles_path = str(pathlib.Path().absolute()) + "/.data/profiles/"
+    profiles_path = str(pathlib.Path().absolute()) + "/../.data/profiles/"
     fname = f"{username}.txt"
     profile_file_path = profiles_path + fname
 
@@ -97,3 +97,7 @@ def app(handle: str = "limitlessmacey"):
         logger.info(f"You have not been faned! He/She is a keeper.")
 
     return response
+
+
+if __name__ == "__main__":
+    app()

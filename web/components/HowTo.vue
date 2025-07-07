@@ -5,7 +5,7 @@
     <li>Go to the desired IG Profile (unless you already know their Handle)</li>
     <li>Copy their Handle ( the name left of the Follow button )</li>
     <li>Paste it in the Search Bar</li>
-    <li><p>1) If the Handle has been seen before, you will see if it had any OnlyFans or Fansly, accounts associated
+    <li><p>1) If the Handle has been seen before, you will see if it had any OnlyFans, Fansly or Fanvue, accounts associated
       (ever
       since it was first registered, could be a few years back)</p>
       <p>2 If the Handle has not been seen before, the Handle
