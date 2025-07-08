@@ -24,7 +24,7 @@ def app(handle: str = "lauramedinarb"):
     # beacons / lik.bio / link.tree / allmylinks
     url = f"https://www.instagram.com/{handle}"
     username = url.strip().split("/")[3].lower()
-    profiles_path = str(pathlib.Path().absolute()) + "/../.data/profiles/"
+    profiles_path = str(pathlib.Path().absolute()) + "/.data/profiles/"
     fname = f"{username}.txt"
     profile_file_path = profiles_path + fname
 
