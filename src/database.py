@@ -49,7 +49,7 @@ def update_sql(table: str, cursor: psycopg.Cursor, **kwargs) -> bool:
         query += f" {x} = {y}, "
 
     query += " updated_at = now() "  # add updated_at
-    query += f" WHERE handle = '{kwargs["handle"]}'"
+    query += " WHERE handle = '{}'".format(kwargs["handle"])
 
     cursor.execute(query)
 
