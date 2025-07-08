@@ -38,6 +38,7 @@ def main():
         conn = psycopg.connect(host=host, dbname=dbname, user=user, password=password, autocommit=True)
         cursor = conn.cursor()
         cursor.execute("UPDATE status SET status = false WHERE process = 'CRAWLER'")
+        cursor.execute("NOTIFY responses, ''")
 
 
 if __name__ == "__main__":
