@@ -17,40 +17,37 @@ user = os.getenv("DB_USER", "postgres")
 password = os.getenv("DB_PASSWORD", "1234")
 
 
-async def main() -> True:
-    # LOCKER
+def main() -> True:
     try:
-        loop = asyncio.get_event_loop()
-        tasks = []
+        loop = asyncio.get_event_loop_policy().get_event_loop()
 
-        # TODO: This is still running on the main loop thus it only listens one at a time?
-        conn = await psycopg.AsyncConnection.connect(host=host, dbname=dbname, user=user, password=password,
-                                                     autocommit=True)
-        async with conn:
-            async with conn.cursor() as cursor:
-                await cursor.execute("UPDATE status SET status = true WHERE process = 'CRAWLER'")
+        tasks = []
+        conn = psycopg.connect(host=host, dbname=dbname, user=user, password=password,
+                               autocommit=True)
+        with conn.cursor() as cursor:
+            cursor.execute("UPDATE status SET status = true WHERE process = 'CRAWLER'")
 
         with ProcessPoolExecutor(max_workers=10) as executor:
-            async with conn:
-                async with conn.cursor() as cursor2:
-                    await cursor2.execute("LISTEN requests;")
-                    print("Listening...")
-                    async for request in conn.notifies(timeout=None):
-                        print(request)
-                        request: Notify = request
-                        tasks.append(loop.run_in_executor(executor, app, request.payload))
+            with conn.cursor() as cursor2:
+                cursor2.execute("LISTEN requests;")
+                print("Listening...")
+                for request in conn.notifies(timeout=None):
+                    print(request)
+                    request: Notify = request
+                    tasks.append(loop.run_in_executor(executor, app, request.payload))
 
     except (Exception, BaseException) as err:
+        # TODO: Add exception response in notify, standarise a bit the exception flow
         print("Ran into an error / interrupt, shutting down")
         print(err)
-        async with conn:
-            async with conn.cursor() as cursor:
-                await cursor.execute("UPDATE status SET status = false WHERE process = 'CRAWLER'")
-                await cursor.execute("NOTIFY responses, ''")  # TODO: Add exception response here
+        with conn.cursor() as cursor:
+            cursor.execute("UPDATE status SET status = false WHERE process = 'CRAWLER'")
+            cursor.execute("NOTIFY responses, ''")
 
-        return None
+    conn.close()
+    return None
 
 
 if __name__ == '__main__':
     freeze_support()
-    asyncio.run(main())
+    main()
