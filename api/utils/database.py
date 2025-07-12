@@ -1,6 +1,6 @@
 import json
 import os
-import time
+
 import psycopg
 
 from src.models import Profile
@@ -11,15 +11,16 @@ user = os.getenv("DB_USER", "postgres")
 password = os.getenv("DB_PASSWORD", "1234")
 
 
-def send_message(handle: str):
-    with psycopg.connect(host=host, dbname=dbname, user=user, password=password, autocommit=True) as conn:
+async def send_message(handle: str):
+    aconn = await psycopg.AsyncConnection.connect(host=host, dbname=dbname, user=user, password=password,
+                                               autocommit=True)
+    async with aconn:
+        async with aconn.cursor() as cursor:
 
-        with conn.cursor() as cursor:
-            cursor.execute(f"NOTIFY requests, '{handle}'")
-            c = 0
+            await cursor.execute(f"NOTIFY requests, '{handle}'")
+            await cursor.execute("LISTEN responses")
 
-            cursor.execute("LISTEN responses")
-            for res in conn.notifies(timeout=None):
+            async for res in aconn.notifies():
                 print(res)
                 as_dict = json.loads(res.payload)
 
@@ -31,8 +32,5 @@ def send_message(handle: str):
                 if profile.handle == handle:
                     return as_dict
 
-                if c == 100:
-                    return False
-
-                time.sleep(1)
-                c =+ 1
+                return None
+            return None

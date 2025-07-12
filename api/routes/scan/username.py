@@ -8,8 +8,8 @@ username_router = APIRouter()
 
 @username_router.post("/{username}")
 async def scan_username(username: str) -> JSONResponse:
-    res = send_message(username)
-    print(res)
+    res = await send_message(username)
+
     if not username:
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=username)
     if res:

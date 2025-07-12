@@ -2,7 +2,7 @@ import pathlib
 
 
 def save_content(content: str, path: str) -> bool:
-    open(path, "w").write(content)
+    with open(path, "w") as f: f.write(content)
     return file_is_local(path)
 
 

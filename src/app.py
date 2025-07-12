@@ -1,7 +1,11 @@
+import json
 import logging
+import os
 import pathlib
 import sys
 from typing import List, Union
+
+import psycopg
 
 from src.content import re_get_exceptions
 from src.content import selenium_get_content, get_provider_content
@@ -9,7 +13,7 @@ from src.database import save_profile
 from src.identify import identify_provider, identify_funny_content
 from src.models import Profile
 from src.providers import instagram_provider, Provider
-from src.utils import file_is_local, save_content
+from src.utils import file_is_local
 
 logger = logging.getLogger(name="crawler")
 logger.setLevel(logging.INFO)
@@ -19,38 +23,39 @@ file_handler = logging.FileHandler("crawler.log")
 logger.addHandler(stream_handler)
 logger.addHandler(file_handler)
 
+host = os.getenv("DB_HOST", "localhost")
+dbname = os.getenv("DB_NAME", "postgres")
+user = os.getenv("DB_USER", "postgres")
+password = os.getenv("DB_PASSWORD", "1234")
+
 
 def app(handle: str = "lauramedinarb"):
     # beacons / lik.bio / link.tree / allmylinks
+    print(f"Start crawling: {handle}")
     url = f"https://www.instagram.com/{handle}"
     username = url.strip().split("/")[3].lower()
-    profiles_path = str(pathlib.Path().absolute()) + "/.data/profiles/"
     fname = f"{username}.txt"
-    profile_file_path = profiles_path + fname
-
-    # make sure it's saved for testing purposes because IG blocks it otherwise
-    if file_is_local(profile_file_path):
-        content = open(profile_file_path, "r").read()
-        exception_response = re_get_exceptions([instagram_provider], content)
-    else:
-        content = selenium_get_content(url, as_headless=False)
-        exception_response = re_get_exceptions([instagram_provider], content)
+    content = selenium_get_content(url, as_headless=False)
+    exception_response = re_get_exceptions([instagram_provider], content)
 
     if exception_response:
         logger.warning(exception_response)
-        return {"exception": exception_response, "isException": True, "profile": {}}
+        res = {"exception": exception_response, "isException": True, "profile": {}}
+        return notify_back(res)
 
-    saved = save_content(content, profile_file_path)
     profile = Profile(
         ig_url=url,
         handle=username,
         fname=fname
     )
-
+    saved = save_profile(profile)
     if not saved:
-        logger.error("Error saving profile")
-        return "Error saving profile, please try again later"
+        logger.error("Could not save profile in DB, bad news")
+        res = {"exception": "Internal Database Error", "isException": True, "profile": profile.__dict__}
+        return notify_back(res)
 
+
+    # TODO: Add if error idiom in the two following lines
     logger.info(f"Profile found and saved: {url}")
     found_links: List[List[Union[Provider, str]]] = identify_provider(content)
     funny_content = identify_funny_content(content)
@@ -62,21 +67,13 @@ def app(handle: str = "lauramedinarb"):
     for link in found_links:
         provider = link[0]
         profile.__setattr__(f"{provider.name}_url", link[1])
-        profile_funny_page_file_path = profiles_path + f"{username}-{provider.name}.txt"
 
-        if not file_is_local(profile_funny_page_file_path):
-            funny_page = get_provider_content(link[1])
-            exception_response = re_get_exceptions([provider], funny_page)
-            if not funny_page or exception_response:
-                logger.info("No content found in funny provider link, strange")
-                return {"exception": exception_response, "isException": True, "profile": profile.__dict__}
-
-            c = save_content(funny_page, profile_funny_page_file_path)
-            if not c:
-                logger.error("Could not save funny provider page")
-                return {"exception": "Internal Server Error", "isException": True, "profile": profile.__dict__}
-        else:
-            funny_page = open(profile_funny_page_file_path, "r").read()
+        funny_page = get_provider_content(link[1])
+        exception_response = re_get_exceptions([provider], funny_page)
+        if not funny_page or exception_response:
+            logger.info("No content found in funny provider link, strange")
+            res = {"exception": exception_response, "isException": True, "profile": profile.__dict__}
+            return notify_back(res)
 
         if funny_page:
             found_urls = identify_funny_content(funny_page)
@@ -84,20 +81,27 @@ def app(handle: str = "lauramedinarb"):
                 profile.funny_page = True
                 profile.__setattr__(f"{provider[0].name}_url", provider[1])
 
+    print(f"Finished crawling: {handle}, returning response asap")
+
     res = save_profile(profile)
     if not res:
         logger.error("Could not save profile in DB, bad news")
-        return {"exception": "Internal Database Error", "isException": True, "profile": profile.__dict__}
+        res = {"exception": "Internal Database Error", "isException": True, "profile": profile.__dict__}
+        return notify_back(res)
 
     if profile.funny_page:
-        response = {"exception": exception_response, "isException": False, "profile": profile.__dict__}
+        res = {"exception": exception_response, "isException": False, "profile": profile.__dict__}
         logger.info(f"You have been faned! He/She is for the streets.")
+        return notify_back(res)
     else:
-        response = {"exception": exception_response, "isException": False, "profile": profile.__dict__}
+        res = {"exception": exception_response, "isException": False, "profile": profile.__dict__}
         logger.info(f"You have not been faned! He/She is a keeper.")
+        return notify_back(res)
 
-    return response
 
-
-if __name__ == "__main__":
-    app()
+def notify_back(res: dict) -> bool:
+    with psycopg.connect(host=host, dbname=dbname, user=user, password=password) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(f"NOTIFY responses, '{json.dumps(res)}'")
+        connection.commit()
+    return True

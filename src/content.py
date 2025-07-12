@@ -1,4 +1,3 @@
-import os
 import re
 import time
 from typing import List
@@ -8,6 +7,7 @@ from selenium import webdriver
 
 from src.providers import Provider
 
+c = 0
 
 def requests_get_content(url: str, headers: dict = {}) -> str:
     r = requests.get(url, headers=headers)
@@ -20,6 +20,7 @@ def requests_get_content(url: str, headers: dict = {}) -> str:
 
 def as_headless(options: webdriver.ChromeOptions) -> webdriver.ChromeOptions:
     options.add_argument("--headless=new")
+
     return options
 
 
@@ -29,8 +30,6 @@ def selenium_get_content(url: str, **kwargs) -> str:
     if kwargs.get("as_headless", ""):
         options = as_headless(options)
 
-    user_data_dir = os.getenv("USERDATADIR", '"/Users/d37998/Library/Application Support/Google/Chrome/Default"')
-    options.add_argument(f'--user-data-dir={user_data_dir}')
     driver = webdriver.Chrome(options=options)
     time.sleep(5)
     driver.get("https://www.instagram.com/")
