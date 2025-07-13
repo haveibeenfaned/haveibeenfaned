@@ -2,6 +2,8 @@ import urllib
 
 from src.models import Provider
 
+# TODO: add and test snipfeed.co
+
 lnktr_provider = Provider(
     name="linktree",
     link_finders=[
