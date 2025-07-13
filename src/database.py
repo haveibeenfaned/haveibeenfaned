@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Union
 
@@ -63,3 +64,11 @@ def profile_exists(handle: str, cursor: psycopg.Cursor) -> bool:
     if res:
         return True
     return False
+
+
+def notify_back(res: dict) -> bool:
+    with psycopg.connect(host=host, dbname=dbname, user=user, password=password) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(f"NOTIFY responses, '{json.dumps(res)}'")
+        connection.commit()
+    return True

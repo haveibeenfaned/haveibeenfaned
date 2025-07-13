@@ -77,7 +77,7 @@ def test_get_provider_content():
 
 def test_re_get_content():
     # complex testing since it requires other functions to function hehe
-    # src.identify.identify_funny_content + onlyfans
+    # src.identify.identify_fans_provider + onlyfans
 
     content_provider = {
         "onlyfans": [
@@ -88,7 +88,7 @@ def test_re_get_content():
         ]
     }
 
-    # src.identify.identify_funny_content + fansly
+    # src.identify.identify_fans_provider + fansly
 
     content_provider = {
         "onlyfans": [
@@ -110,7 +110,7 @@ def test_re_get_content():
         ]
     }
 
-    # src.identify.identify_provider
+    # src.identify.identify_link_provider
 
     providers = {
         "linktr.ee": [

@@ -4,7 +4,7 @@ from src.content import re_get_content
 from src.providers import *
 
 
-def identify_provider(content: str) -> list[Optional[list]]:
+def identify_link_provider(content: str) -> list[Optional[list]]:
     providers = [
         lnk_provider,
         lnktr_provider,
@@ -15,7 +15,7 @@ def identify_provider(content: str) -> list[Optional[list]]:
     return re_get_content(providers, content)
 
 
-def identify_funny_content(content: str) -> list:
+def identify_fans_provider(content: str) -> list:
     content_providers = [
         onlyfans_provider,
         fansly_provider,

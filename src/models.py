@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, List, Dict
 
-
+# TODO: Delete fname from database
 @dataclass(frozen=False)
 class Profile:
     ig_url: str
@@ -13,7 +13,6 @@ class Profile:
     lnk_url: str = None
     allmylinks_url: str = None
     fanvue_url: str = None
-    fname: str = None
     funny_page: bool = False
 
 
