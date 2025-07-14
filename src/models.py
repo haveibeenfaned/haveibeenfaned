@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional, List, Dict
 
-# TODO: Delete fname from database
 @dataclass(frozen=False)
 class Profile:
     ig_url: str

@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <div class="grid grid-cols-1 grid-rows-8 gap-2 py-5 md:max-w-screen-2xl sd:max-w-screen-sm">
-      <div class="row-span-2 text-center md:text-2xl sd:text-xl font-mono">
+    <div class="grid grid-cols-1 grid-rows-6">
+      <div class="row-span-2 text-center font-mono">
         <label for="message"
                class="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-500 inline-block text-transparent bg-clip-text">Check
           in the Hall of Shame</label>
@@ -17,7 +17,7 @@
             required
         />
       </div>
-      <div class="row-span-2 text-center py-2 md:text-lg sd:text-base">
+      <div class="row-span-2 text-center py-2">
         <button
             type="submit"
             class="submit-button bg-blue-500 hover:bg-blue-700 text-slate-300 font-bold py-2 px-4 rounded-full"
@@ -26,26 +26,31 @@
         </button>
       </div>
     </div>
-
-    <div class="text-slate-300 md:text-base sd:text-sm md:max-w-screen-2xl sd:max-w-screen-sm text-center font-bold">
-      <div v-if="excepted === true">
-        <pre> {{ exceptedMessage }} 😱</pre>
-      </div>
-      <div v-if="excepted === false && isFunny === true">
-        <pre>Fans page detected, respect rejected 😎: </pre>
-        <pre>OnlyFans: {{ onlyFansUrl }}</pre>
-        <pre>Fansly: {{ fanslyUrl }}</pre>
-        <pre>Fanvue: {{ fanvueUrl }}</pre>
-      </div>
-      <div v-if="excepted === false && isFunny === false && responseText !== ''">
-        <pre>Fans page NOT detected, respect NOT rejected 😎: @{{ handleName }}</pre>
-      </div>
-      <div v-if="error === true">
-        <pre>Error with the front end or something, look i'm not a front end dev ok, I am trying my best here</pre>
-      </div>
-    </div>
-
   </form>
+  <div class="text-slate-300 py-5 grid grid-cols-1 grid-rows-5 text-wrap break-words">
+    <div v-if="excepted === true" class="row-span-1">
+      <p> {{ exceptedMessage }} 😱</p>
+    </div>
+    <div v-if="excepted === false && isFunny === true" class="row-span-4">
+      <p>Fans page detected, respect rejected 😎.
+      </p>
+      <p>
+        OnlyFans: {{ onlyFansUrl }}
+      </p>
+      <p>
+        Fansly: {{ fanslyUrl }}
+      </p>
+      <p>
+        Fanvue: {{ fanvueUrl }}
+      </p>
+    </div>
+    <div v-if="excepted === false && isFunny === false && responseText !== ''">
+      <p>Fans page NOT detected, respect NOT rejected 😎: @{{ handleName }}</p>
+    </div>
+    <div v-if="error === true">
+      <p>Error somewhere, trying my best here, try later</p>
+    </div>
+  </div>
 </template>
 
 <script setup>

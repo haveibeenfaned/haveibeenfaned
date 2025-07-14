@@ -6,7 +6,7 @@ from typing import List, Union
 from src.content import re_get_exceptions
 from src.content import selenium_get_content, get_provider_content
 from src.content_providers.social_providers import instagram_provider
-from src.database import save_profile, notify_back
+from src.database import save_profile, notify_back, profile_exists
 from src.identify import identify_link_provider, identify_fans_provider
 from src.models import Profile, Provider
 
@@ -22,9 +22,19 @@ logger.addHandler(file_handler)
 def app(handle: str = "lauramedinarb"):
     logger.info(f"Crawler - Start crawling: {handle}")
     URL = f"https://www.instagram.com/{handle}"
-    profile = Profile(handle=handle, ig_url=URL)
-    response = {"exception": "", "isException": False, "profile": profile, "status_code": 200}
 
+    profile = profile_exists(handle)
+    response = {"profile": profile, "status_code": http.client.OK, "isException": False, "exception": None}
+
+    if profile and profile.funny_page:
+        logger.info(f"Crawler - Profile exists and has already been shamed: {handle}")
+        res = create_payload(**response)
+        return notify_back(res)
+
+    profile = Profile(handle=handle, ig_url=URL)
+    response["profile"] = profile
+
+    logger.info(f"Crawler - Getting Selenium Content")
     content = selenium_get_content(URL, as_headless=False)
     if not content:
         logger.info(f"Crawler - No Data found: {URL}")
@@ -32,13 +42,14 @@ def app(handle: str = "lauramedinarb"):
             create_payload(isException=True, exception="Crawler - Not Found Error ",
                            status_code=http.client.NOT_FOUND, **response))
 
+    logger.info(f"Crawler - Analysing Exceptions")
     exception_response = re_get_exceptions([instagram_provider], content)
     if exception_response:
         logger.warning(exception_response)
         return notify_back(
-            create_payload(isException=True, exception=exception_response, status_code=http.client.FAILED_DEPENDENCY,
-                           **response))
+            create_payload(**response, isException=True, exception=exception_response, status_code=http.client.FAILED_DEPENDENCY))
 
+    logger.info(f"Crawler - Saving Profile")
     saved = save_profile(profile)
     if not saved:
         logger.warning(f"Database - Could not save profile: {profile}")
@@ -51,7 +62,7 @@ def app(handle: str = "lauramedinarb"):
 
     for link in fans_links:
         logger.info(f"Crawler - Fans link found: {link}, appending to Profile")
-        profile.__setattr__(f"{link[0]}_URL", link[1])
+        profile.__setattr__(f"{link[0]}_url", link[1])
 
     saved = save_profile(profile)
     if not saved:
@@ -61,7 +72,7 @@ def app(handle: str = "lauramedinarb"):
 
     for link in providers_links:
         provider = link[0]
-        profile.__setattr__(f"{provider.name}_URL", link[1])
+        profile.__setattr__(f"{provider.name}_url", link[1])
 
     saved = save_profile(profile)
     if not saved:
@@ -95,7 +106,7 @@ def app(handle: str = "lauramedinarb"):
 
         for provider in found_urls:
             profile.funny_page = True
-            profile.__setattr__(f"{provider[0].name}_URL", provider[1])
+            profile.__setattr__(f"{provider[0].name}_url", provider[1])
 
     print(f"Crawler - Finished Crawling: {handle}, saving profile and returning response")
 

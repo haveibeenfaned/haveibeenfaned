@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import sys
-from typing import Union
+from typing import Union, Optional
 
 import psycopg
 from psycopg.rows import dict_row
@@ -27,15 +27,15 @@ def save_profile(profile: Profile) -> Union[Profile, bool]:
     try:
         with psycopg.connect(host=host, dbname=dbname, user=user, password=password, row_factory=dict_row) as conn:
             with conn.cursor() as cursor:
-                if profile_exists(profile.handle, cursor):
+                if profile_exists(profile.handle):
                     update_sql("profiles", cursor, **profile.__dict__)
                 else:
                     insert_sql("profiles", cursor, **profile.__dict__)
 
             conn.commit()
 
-    except psycopg.Error as e:
-        print(e)
+    except psycopg.Error as err:
+        logger.error(err)
         return False
 
     return profile
@@ -67,17 +67,23 @@ def update_sql(table: str, cursor: psycopg.Cursor, **kwargs) -> bool:
     return True
 
 
-def profile_exists(handle: str, cursor: psycopg.Cursor) -> bool:
-    cursor.execute(f"SELECT * FROM profiles WHERE handle = '{handle}'")
-    res = cursor.fetchone()
+def profile_exists(handle: str) -> Union[Profile, bool]:
+    with psycopg.connect(host=host, dbname=dbname, user=user, password=password, row_factory=dict_row) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT * FROM profiles WHERE handle = '{handle}'")
+            res = cursor.fetchone()
 
     if res:
-        return True
+        res.__delitem__("id")
+        res.__delitem__("created_at")
+        res.__delitem__("updated_at")
+        return Profile(**res)
     return False
 
 
 def notify_back(res: dict) -> bool:
-    logger.info(f"Database - Notify Back: {res}")
+    logger.info(f"Database - Notifying: {res}")
+    res["profile"] = res["profile"].__dict__
     with psycopg.connect(host=host, dbname=dbname, user=user, password=password) as connection:
         with connection.cursor() as cursor:
             cursor.execute(f"NOTIFY responses, '{json.dumps(res)}'")

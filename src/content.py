@@ -73,7 +73,7 @@ def re_get_content(content_providers: List[Provider],
             if pattern["post"]:
                 link = pattern["post"].__call__(link)
 
-            found_providers.append([provider, f"https://{link}"])
+            found_providers.append([provider, f"{link}"])
             break
 
     return found_providers
