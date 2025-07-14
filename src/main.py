@@ -34,6 +34,7 @@ def main() -> True:
                 for request in conn.notifies(timeout=None):
                     print(request)
                     request: Notify = request
+                    copy_profile(request.payload)
                     tasks.append(loop.run_in_executor(executor, app, request.payload))
 
     except (Exception, BaseException) as err:
@@ -46,6 +47,17 @@ def main() -> True:
 
     conn.close()
     return None
+
+
+def copy_profile(handle: str):
+    from shutil import copytree
+    import pathlib
+    abs_data_path = str(pathlib.Path().absolute()) + f"/.data/{handle}"
+
+    abs_path = os.getenv("USERDATADIR", "")
+    copytree(abs_path, abs_data_path)
+
+    return True
 
 
 if __name__ == '__main__':

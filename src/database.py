@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import pathlib
 import sys
 from typing import Union, Optional
 
@@ -82,6 +83,9 @@ def profile_exists(handle: str) -> Union[Profile, bool]:
 
 
 def notify_back(res: dict) -> bool:
+    logger.info(f"Crawler - Removing profile: {str(pathlib.Path(__file__).parent) + f"/.data/{res["profile"].handle}"}")
+    os.removedirs(str(pathlib.Path(__file__).parent) + f"/.data/{res["profile"].handle}")
+
     logger.info(f"Database - Notifying: {res}")
     res["profile"] = res["profile"].__dict__
     with psycopg.connect(host=host, dbname=dbname, user=user, password=password) as connection:

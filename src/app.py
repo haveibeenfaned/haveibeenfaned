@@ -1,5 +1,7 @@
 import http.client
 import logging
+import os
+import pathlib
 import sys
 from typing import List, Union
 
@@ -35,7 +37,7 @@ def app(handle: str = "lauramedinarb"):
     profile = Profile(handle=handle, ig_url=URL)
 
     logger.info(f"Crawler - Getting Selenium Content")
-    content = selenium_get_content(URL, as_headless=False)
+    content = selenium_get_content(URL, profile=handle, as_headless=False)
     if not content:
         logger.info(f"Crawler - No Data found: {URL}")
         return notify_back(

@@ -1,3 +1,4 @@
+import pathlib
 import re
 import time
 from typing import List
@@ -30,6 +31,7 @@ def selenium_get_content(url: str, **kwargs) -> str:
     if kwargs.get("as_headless", ""):
         options = as_headless(options)
 
+    options.add_argument(f"--user-data-dir={str(pathlib.Path().absolute())}/.data/{kwargs.get("handle")}")
     driver = webdriver.Chrome(options=options)
     time.sleep(5)
     driver.get("https://www.instagram.com/")
