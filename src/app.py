@@ -24,15 +24,15 @@ def app(handle: str = "lauramedinarb"):
     URL = f"https://www.instagram.com/{handle}"
 
     profile = profile_exists(handle)
-    response = {"profile": profile, "status_code": http.client.OK, "isException": False, "exception": None}
 
     if profile and profile.funny_page:
         logger.info(f"Crawler - Profile exists and has already been shamed: {handle}")
-        res = create_payload(**response)
-        return notify_back(res)
+        return notify_back(
+            create_payload(isException=False, exception="Crawler - Already Crawled and Shamed",
+                           status_code=http.client.OK, profile=profile))
 
+    # Override profile if it already exists and needs recrawling
     profile = Profile(handle=handle, ig_url=URL)
-    response["profile"] = profile
 
     logger.info(f"Crawler - Getting Selenium Content")
     content = selenium_get_content(URL, as_headless=False)
@@ -40,21 +40,22 @@ def app(handle: str = "lauramedinarb"):
         logger.info(f"Crawler - No Data found: {URL}")
         return notify_back(
             create_payload(isException=True, exception="Crawler - Not Found Error ",
-                           status_code=http.client.NOT_FOUND, **response))
+                           status_code=http.client.NOT_FOUND, profile=profile))
 
     logger.info(f"Crawler - Analysing Exceptions")
     exception_response = re_get_exceptions([instagram_provider], content)
     if exception_response:
         logger.warning(exception_response)
         return notify_back(
-            create_payload(**response, isException=True, exception=exception_response, status_code=http.client.FAILED_DEPENDENCY))
+            create_payload(isException=True, exception=exception_response,
+                           status_code=http.client.FAILED_DEPENDENCY, profile=profile))
 
     logger.info(f"Crawler - Saving Profile")
     saved = save_profile(profile)
     if not saved:
         logger.warning(f"Database - Could not save profile: {profile}")
         return notify_back(create_payload(isException=True, exception="Database - Internal Server Error",
-                                          status_code=http.client.INTERNAL_SERVER_ERROR, **response))
+                                          status_code=http.client.INTERNAL_SERVER_ERROR, profile=profile))
 
     logger.info(f"Crawler - Profile found and saved: {URL}")
     providers_links: List[List[Union[Provider, str]]] = identify_link_provider(content)
@@ -68,7 +69,7 @@ def app(handle: str = "lauramedinarb"):
     if not saved:
         logger.warning(f"Database - Could not save profile: {profile}")
         return notify_back(create_payload(isException=True, exception="Database - Internal Server Error",
-                                          status_code=http.client.INTERNAL_SERVER_ERROR, **response))
+                                          status_code=http.client.INTERNAL_SERVER_ERROR, profile=profile))
 
     for link in providers_links:
         provider = link[0]
@@ -78,7 +79,7 @@ def app(handle: str = "lauramedinarb"):
     if not saved:
         logger.warning(f"Database - Could not save profile: {profile}")
         return notify_back(create_payload(isException=True, exception="Database - Internal Server Error",
-                                          status_code=http.client.INTERNAL_SERVER_ERROR, **response))
+                                          status_code=http.client.INTERNAL_SERVER_ERROR, profile=profile))
 
     for link in providers_links:
         provider = link[0]
@@ -86,18 +87,16 @@ def app(handle: str = "lauramedinarb"):
 
         if not content:
             logger.info(f"Crawler - No content found for link provider: {link}")
-            res = {"exception": exception_response, "isException": True, "profile": profile.__dict__}
             return notify_back(
                 create_payload(isException=True, exception="Crawler - No content found for link provider",
-                               status_code=http.client.INTERNAL_SERVER_ERROR, **res))
+                               status_code=http.client.NOT_FOUND, profile=profile))
 
         exception_response = re_get_exceptions([provider], content)
 
         if exception_response:
             logger.warning(exception_response)
             return notify_back(create_payload(isException=True, exception=exception_response,
-                                              status_code=http.client.INTERNAL_SERVER_ERROR,
-                                              **response))
+                                              status_code=http.client.NOT_FOUND, profile=profile))
 
         found_urls = identify_fans_provider(content)
 
@@ -114,14 +113,16 @@ def app(handle: str = "lauramedinarb"):
     if not saved:
         logger.warning(f"Database - Could not save profile: {profile}")
         return notify_back(create_payload(isException=True, exception="Database - Internal Server Error",
-                                          status_code=http.client.INTERNAL_SERVER_ERROR, **response))
+                                          status_code=http.client.INTERNAL_SERVER_ERROR, profile=profile))
 
     if profile.funny_page:
         logger.info(f"You have been faned! He/She is for the streets.")
-        return notify_back(create_payload(**response))
+        return notify_back(create_payload(isException=False, exception="You have been faned! He/She is for the streets",
+                                          status_code=http.client.OK, profile=profile))
     else:
         logger.info(f"You have not been faned! He/She is a keeper.")
-        return notify_back(create_payload(**response))
+        return notify_back(create_payload(isException=False, exception="You have NOT been faned! He/She is for the streets",
+                                          status_code=http.client.OK, profile=profile))
 
 
 def create_payload(**kwargs) -> dict:

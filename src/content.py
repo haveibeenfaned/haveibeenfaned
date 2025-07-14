@@ -15,7 +15,7 @@ def requests_get_content(url: str, headers: dict = {}) -> str:
     if r.status_code != 200 or r.content is None or r.content == "":
         return ""
 
-    return r.content.decode("utf-8")
+    return r.content.decode("utf-8").lower()
 
 
 def as_headless(options: webdriver.ChromeOptions) -> webdriver.ChromeOptions:
@@ -86,7 +86,6 @@ def get_provider_content(url: str) -> str:
 
     if "linktr.ee" in url:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-        print(" I come here")
         content = requests_get_content(url, headers=headers)
 
     if "lnk" in url:

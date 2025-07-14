@@ -43,7 +43,7 @@ def save_profile(profile: Profile) -> Union[Profile, bool]:
 
 def insert_sql(table: str, cursor: psycopg.Cursor, **kwargs) -> bool:
     columns = ",".join(list(kwargs.keys()))
-    values = list(map(lambda x: f"'{x}'" if x is not None else "NULL", list(kwargs.values())))
+    values = list(map(lambda x: f"{x}" if isinstance(x, bool) else f"'{x}'" if x is not None else "NULL", list(kwargs.values())))
     values = ",".join(values)
     cursor.execute(f"INSERT INTO {table} ({columns}, created_at) VALUES ({values}, now())")  # add created at
 
@@ -56,7 +56,7 @@ def update_sql(table: str, cursor: psycopg.Cursor, **kwargs) -> bool:
 
         if x == "handle": continue
 
-        y = f"'{y}'" if y is not None else "NULL"
+        y = f"{y}" if isinstance(y, bool) else f"'{y}'" if y is not None else "NULL"
         query += f" {x} = {y}, "
 
     query += " updated_at = now() "  # add updated_at
