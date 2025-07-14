@@ -1,5 +1,7 @@
 import json
+import logging
 import os
+import sys
 from typing import Union
 
 import psycopg
@@ -11,6 +13,14 @@ host = os.getenv("DB_HOST", "localhost")
 dbname = os.getenv("DB_NAME", "postgres")
 user = os.getenv("DB_USER", "postgres")
 password = os.getenv("DB_PASSWORD", "1234") # .gitignore
+
+logger = logging.getLogger(name="database")
+logger.setLevel(logging.INFO)
+stream_handler = logging.StreamHandler(sys.stdout)
+file_handler = logging.FileHandler("database.log")
+
+logger.addHandler(stream_handler)
+logger.addHandler(file_handler)
 
 
 def save_profile(profile: Profile) -> Union[Profile, bool]:
@@ -67,6 +77,7 @@ def profile_exists(handle: str, cursor: psycopg.Cursor) -> bool:
 
 
 def notify_back(res: dict) -> bool:
+    logger.info(f"Database - Notify Back: {res}")
     with psycopg.connect(host=host, dbname=dbname, user=user, password=password) as connection:
         with connection.cursor() as cursor:
             cursor.execute(f"NOTIFY responses, '{json.dumps(res)}'")

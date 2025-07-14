@@ -1,7 +1,8 @@
 from typing import Optional
 
 from src.content import re_get_content
-from src.providers import *
+from src.content_providers.fans_providers import *
+from src.content_providers.link_providers import *
 
 
 def identify_link_provider(content: str) -> list[Optional[list]]:
@@ -16,10 +17,10 @@ def identify_link_provider(content: str) -> list[Optional[list]]:
 
 
 def identify_fans_provider(content: str) -> list:
-    content_providers = [
+    fans_providers = [
         onlyfans_provider,
         fansly_provider,
         fanvue_provider
     ]
 
-    return re_get_content(content_providers, content)
+    return re_get_content(fans_providers, content)

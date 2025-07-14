@@ -2,8 +2,6 @@ import urllib
 
 from src.models import Provider
 
-# TODO: add and test snipfeed.co
-
 lnktr_provider = Provider(
     name="linktree",
     link_finders=[
@@ -35,37 +33,3 @@ allmylinks_provider = Provider(
         {"find": r"allmylinks.com/[0-9a-zA-Z_-]+", "post": ""}
     ],
     exceptions=[])
-
-instagram_provider = Provider(
-    name="ig",
-    link_finders=[],
-    exceptions=[
-        {"find": r">sorry, this page isn't available", "response": "IG Profile Not Found"},
-        {"find": r">something went wrong",
-         "response": "IG Profile Not Found due to Crawler being blocked, try again later"}
-    ])
-
-onlyfans_provider = Provider(
-    name="onlyfans",
-    link_finders=[
-        {"find": r"onlyfans.com/0-9[A-Za-z_-]+", "post": ""},
-        {"find": r"onlyfans", "post": lambda x: f"https://{str(x)}.com/COULDNOTGETLINK"}
-    ],
-    exceptions=[]
-)
-
-fansly_provider = Provider(
-    name="fansly",
-    link_finders=[
-        {"find": r"fansly.com/[0-9A-Za-z_-]+", "post": ""}
-    ],
-    exceptions=[]
-)
-
-fanvue_provider = Provider(
-    name="fanvue",
-    link_finders=[
-        {"find": r"fanvue.com/[0-9A-Za-z_-]+", "post": ""}
-    ],
-    exceptions=[]
-)

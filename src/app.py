@@ -5,10 +5,10 @@ from typing import List, Union
 
 from src.content import re_get_exceptions
 from src.content import selenium_get_content, get_provider_content
+from src.content_providers.social_providers import instagram_provider
 from src.database import save_profile, notify_back
 from src.identify import identify_link_provider, identify_fans_provider
-from src.models import Profile
-from src.providers import instagram_provider, Provider
+from src.models import Profile, Provider
 
 logger = logging.getLogger(name="crawler")
 logger.setLevel(logging.INFO)
@@ -20,7 +20,7 @@ logger.addHandler(file_handler)
 
 
 def app(handle: str = "lauramedinarb"):
-    logger.info(f"Start crawling: {handle}")
+    logger.info(f"Crawler - Start crawling: {handle}")
     URL = f"https://www.instagram.com/{handle}"
     profile = Profile(handle=handle, ig_url=URL)
     response = {"exception": "", "isException": False, "profile": profile, "status_code": 200}

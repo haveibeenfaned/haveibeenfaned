@@ -5,7 +5,7 @@ from typing import List
 import requests
 from selenium import webdriver
 
-from src.providers import Provider
+from src.models import Provider
 
 c = 0
 

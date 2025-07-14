@@ -1,18 +1,19 @@
 <template>
-  <div class="grid grid-cols-2 grid-rows-1 justify-items-center py-9">
-    <div v-if="crawlerStatus === 'False'" class="grid-col-start-1">
-      <pre class="text-slate-300">Crawler 🔴, requests will not be processed, sorry :( </pre>
+  <div class="grid grid-cols-1 grid-rows-2 justify-items-center py-9">
+    <div v-if="crawlerStatus === 'False'" class="grid-col-start-1 grid-row-start-2">
+      <pre class="text-slate-300">          Crawler 🔴</pre>
+      <pre class="text-slate-300">Requests will not be processed</pre>
     </div>
-    <div v-if="crawlerStatus === 'True'">
+    <div v-if="crawlerStatus === 'True'" class="grid-col-start-1 grid-row-start-2">
       <pre class="text-slate-300">Crawler 🟢</pre>
     </div>
-    <div v-if="databaseStatus === 'False'" class="grid-col-start-2">
+    <div v-if="databaseStatus === 'False'" class="grid-col-start-1 grid-row-start-2">
       <pre class="text-slate-300">Database 🔴</pre>
     </div>
-    <div v-if="databaseStatus === 'True' && crawlerStatus === 'True'" class="form-label">
+    <div v-if="databaseStatus === 'True' && crawlerStatus === 'True'" class="grid-col-start-1 grid-row-start-1">
       <pre class="text-slate-300">Database 🟢</pre>
     </div>
-    <div v-if="databaseStatus === 'True' && crawlerStatus === 'False'" class="form-label">
+    <div v-if="databaseStatus === 'True' && crawlerStatus === 'False'" class="grid-col-start-1 grid-row-start-1">
       <pre class="text-slate-300">Database 🟠</pre>
     </div>
   </div>
