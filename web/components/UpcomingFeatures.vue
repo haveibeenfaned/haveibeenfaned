@@ -21,6 +21,5 @@ Top 10 Upcoming Features:
     <li>Create our own API interface for other people to use (free of charge!)</li>
     <li>Support for Downloading Handle histories in different formats</li>
   </ol>
+  <a class="sd:pl-10 md:pl-20 list-decimal text-slate-300 font-mono md:text-base sd:text-sm md:max-w-4xl" href="https://github.com/haveibeenfaned/haveibeenfaned/">Contribute to the cause on Github!</a>
 </template>
-<script setup lang="ts">
-</script>

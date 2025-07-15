@@ -46,3 +46,37 @@ Inspired by have I been pwned, this is the first public record of people that ha
 ## To research / improve 
 
 - Sometimes beacons.ai hides the link very well, there is an extra reguex for it but the link will not be returned!
+
+## Testing
+![Alt Text](https://tenor.com/th/view/are-you-serious-spiderman-meme-laugh-laughing-gif-7178438.gif)
+
+## Deploying with nuxt
+From root
+```shell
+cd web
+npm run generate
+cd ..
+fly deploy
+```
+
+## Dev servers
+API - From root
+```shell
+fastapi dev
+```
+
+Front end - From root
+```shell
+cd web
+npm run dev
+```
+
+Crawler - From root (with orchestrator)
+```shell
+PYTHONPATH=./ ./src/main.py
+```
+
+Make sure to spin up a database and do the corresponding migrations
+```shell
+docker run -d -p 5432:5432 --name hbif-postgres -e POSTGRES_PASSWORD=1234 -e POSTGRES_USER=postgres --volume hbif-postgres-volume:{project_path}.docker/ postgres:17.5-alpine3.22 
+```
