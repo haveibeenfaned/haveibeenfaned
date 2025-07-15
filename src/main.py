@@ -1,4 +1,5 @@
 import asyncio
+import http.client
 import os
 from concurrent.futures import ProcessPoolExecutor
 from multiprocessing import freeze_support
@@ -6,7 +7,9 @@ from multiprocessing import freeze_support
 import psycopg
 from psycopg import Notify
 
-from src.app import app
+from database import notify_back
+from src.app import app, create_payload
+from src.models import Profile
 
 # local crawler session
 # requires proxied POSTGRESQL connection for production run
@@ -34,7 +37,7 @@ def main() -> True:
                 for request in conn.notifies(timeout=None):
                     print(request)
                     request: Notify = request
-                    copy_profile(request.payload)
+                    # copy_profile(request.payload)
                     tasks.append(loop.run_in_executor(executor, app, request.payload))
 
     except (Exception, BaseException) as err:
@@ -43,9 +46,12 @@ def main() -> True:
         print(err)
         with conn.cursor() as cursor:
             cursor.execute("UPDATE status SET status = false WHERE process = 'CRAWLER'")
-            cursor.execute("NOTIFY responses, ''")
 
-    conn.close()
+        return notify_back(
+            create_payload(isException=False, exception="You have NOT been faned! He/She is for the streets",
+                           status_code=http.client.INTERNAL_SERVER_ERROR, profile=Profile(handle=request.payload,
+                                                                                          ig_url=f"https://www.instagram.com/{request.payload}").__dict__))
+
     return None
 
 

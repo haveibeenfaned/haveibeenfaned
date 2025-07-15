@@ -5,6 +5,7 @@ from typing import List
 
 import requests
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 from src.models import Provider
 
@@ -31,11 +32,25 @@ def selenium_get_content(url: str, **kwargs) -> str:
     if kwargs.get("as_headless", ""):
         options = as_headless(options)
 
-    options.add_argument(f"--user-data-dir={str(pathlib.Path().absolute())}/.data/{kwargs.get("handle")}")
+    print(f"{str(pathlib.Path().absolute())}/.data/{kwargs.get("handle")}/")
+    # options.add_argument(f"--user-data-dir=/Users/d37998/Library/Application Support/Google/Chrome/Default/")
     driver = webdriver.Chrome(options=options)
     time.sleep(5)
     driver.get("https://www.instagram.com/")
-    time.sleep(3)
+    time.sleep(2)
+    cookies = driver.find_element(by=By.XPATH, value="/html/body/div[3]/div[1]/div/div[2]/div/div/div/div/div[2]/div/button[1]")
+    cookies.click()
+
+    time.sleep(5)
+    username_input = driver.find_element(by=By.NAME, value="username")
+    password_input = driver.find_element(by=By.NAME, value="password")
+
+    time.sleep(6)
+    username_input.send_keys("@metaler896")
+    password_input.send_keys("dragongt")
+    login_button = driver.find_element(by=By.XPATH, value="//button[@type='submit']")
+    login_button.click()
+    time.sleep(10)
     driver.get(url)
     time.sleep(10)
     source = str(driver.page_source).lower()

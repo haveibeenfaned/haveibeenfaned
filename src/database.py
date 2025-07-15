@@ -9,6 +9,7 @@ import psycopg
 from psycopg.rows import dict_row
 
 from src.models import Profile
+from utils import dir_is_local
 
 host = os.getenv("DB_HOST", "localhost")
 dbname = os.getenv("DB_NAME", "postgres")
@@ -83,11 +84,12 @@ def profile_exists(handle: str) -> Union[Profile, bool]:
 
 
 def notify_back(res: dict) -> bool:
-    logger.info(f"Crawler - Removing profile: {str(pathlib.Path(__file__).parent) + f"/.data/{res["profile"].handle}"}")
-    os.removedirs(str(pathlib.Path(__file__).parent) + f"/.data/{res["profile"].handle}")
+    dir_path = str(pathlib.Path(__file__).parent) + f"/.data/{res["profile"]["handle"]}/"
+    logger.info(f"Crawler - Removing profile: {dir_path}")
+    if dir_is_local(dir_path):
+        os.removedirs(dir_path)
 
     logger.info(f"Database - Notifying: {res}")
-    res["profile"] = res["profile"].__dict__
     with psycopg.connect(host=host, dbname=dbname, user=user, password=password) as connection:
         with connection.cursor() as cursor:
             cursor.execute(f"NOTIFY responses, '{json.dumps(res)}'")
