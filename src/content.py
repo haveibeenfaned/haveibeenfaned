@@ -1,3 +1,4 @@
+import os
 import pathlib
 import re
 import time
@@ -47,7 +48,7 @@ def selenium_get_content(url: str, **kwargs) -> str:
 
     time.sleep(6)
     username_input.send_keys("@metaler896")
-    password_input.send_keys("dragongt")
+    password_input.send_keys(os.getenv("PASSWORD", "1234"))
     login_button = driver.find_element(by=By.XPATH, value="//button[@type='submit']")
     login_button.click()
     time.sleep(10)
