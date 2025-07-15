@@ -8,6 +8,7 @@
 Top 10 Upcoming Features:
   </pre>
   <ol class="sd:pl-10 md:pl-20 list-decimal text-slate-300 font-mono md:text-base sd:text-sm md:max-w-4xl">
+    <li>UI Improvements, honestly I am terrible at design / antyhing front end related</li>
     <li>Support for Twitter and Threads Handles (only Instagram registered)</li>
     <li>Support for more link agreggators</li>
     <li>Support for more clones of OnlyFans / Fansly</li>
@@ -17,7 +18,6 @@ Top 10 Upcoming Features:
     <li>Dedicated Search Page for Handle search</li>
     <li>Support for re processing a Handle</li>
     <li>Enable Handles to have a history</li>
-    <li>UI Improvements</li>
     <li>Create our own API interface for other people to use (free of charge!)</li>
     <li>Support for Downloading Handle histories in different formats</li>
   </ol>
